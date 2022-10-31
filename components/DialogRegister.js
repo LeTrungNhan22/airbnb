@@ -59,9 +59,7 @@ const DialogRegister = ({ openModal, closeModal, isOpen }) => {
           fullName: fullName,
           gender: "MAN",
           imageUrl: "String",
-
           telephone: "0353357781",
-
           username: username,
         },
       });

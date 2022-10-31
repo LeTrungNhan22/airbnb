@@ -19,7 +19,6 @@ import SearchBar from "./SearchBar";
 const Header = () => {
   // open model register
   let [isOpen, setIsOpen] = useState(false);
-
   function closeModal() {
     setIsOpen(false);
   }
@@ -168,7 +167,7 @@ const Header = () => {
                             aria-hidden="true"
                           />
                         )}
-                        Hồ sơ
+                        Tài khoản
                       </button>
                     )}
                   </Menu.Item>
