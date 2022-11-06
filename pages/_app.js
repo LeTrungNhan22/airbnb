@@ -4,9 +4,9 @@ import NextNProgress from "nextjs-progressbar";
 
 import "../styles/globals.css";
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+function MyApp({ Component, pageProps }) {
   return (
-    <SessionProvider session={session}>
+    <>
       <Toaster position="top-center" reverseOrder={true} />
       <NextNProgress
         color="linear-gradient(to right, rgba(255,0,0,0),rgba(255,0,0,3));"
@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
       />
 
       <Component {...pageProps} />
-    </SessionProvider>
+    </>
   );
 }
 // function Auth({ children }) {

@@ -69,41 +69,44 @@ const Header = () => {
           >
             <Menu.Items className="absolute right-10 mt-2 w-60 origin-top-right divide-y divide-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="px-1 py-1 ">
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      onClick={openModal}
-                      className={`${
-                        active ? "hover-active" : "text-gray-900"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-md`}
-                    >
-                      {active ? (
-                        <div className=" h-5 w-5" aria-hidden="true" />
-                      ) : (
-                        <div className=" h-5 w-5" aria-hidden="true" />
-                      )}
+                <Link href="/register">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? "hover-active" : "text-gray-900"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-md`}
+                      >
+                        {active ? (
+                          <div className=" h-5 w-5" aria-hidden="true" />
+                        ) : (
+                          <div className=" h-5 w-5" aria-hidden="true" />
+                        )}
 
-                      <p className="font-semibold">Đăng ký</p>
-                    </button>
-                  )}
-                </Menu.Item>
+                        <p className="font-semibold">Đăng ký</p>
+                      </button>
+                    )}
+                  </Menu.Item>
+                </Link>
 
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={`${
-                        active ? "hover-active" : "text-gray-900"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-md`}
-                    >
-                      {active ? (
-                        <div className=" h-5 w-5" aria-hidden="true" />
-                      ) : (
-                        <div className=" h-5 w-5" aria-hidden="true" />
-                      )}
-                      Đăng nhập
-                    </button>
-                  )}
-                </Menu.Item>
+                <Link href="/login">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? "hover-active" : "text-gray-900"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-md`}
+                      >
+                        {active ? (
+                          <div className=" h-5 w-5" aria-hidden="true" />
+                        ) : (
+                          <div className=" h-5 w-5" aria-hidden="true" />
+                        )}
+                        Đăng nhập
+                      </button>
+                    )}
+                  </Menu.Item>
+                </Link>
               </div>
               <div className="px-1 py-1">
                 <Menu.Item>
@@ -148,7 +151,7 @@ const Header = () => {
                 </Menu.Item>
               </div>
               <div className="px-1 py-1">
-                <Link href="/account-setting">
+                <Link href="/user/account/profile">
                   <Menu.Item>
                     {({ active }) => (
                       <button
