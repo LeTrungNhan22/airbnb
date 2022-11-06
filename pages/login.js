@@ -54,7 +54,7 @@ const LoginScreen = () => {
       <div className="w-full">
         <Image
           alt=""
-          src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
+          src="https://images.unsplash.com/photo-1666360128776-1c80197203ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&dpr=1&auto=format%2Ccompress&fit=crop&w=1599&h=594"
           layout="fill"
           className="object-center object-cover"
         ></Image>
