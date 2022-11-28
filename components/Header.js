@@ -69,7 +69,7 @@ const Header = () => {
           >
             <Menu.Items className="absolute right-10 mt-2 w-60 origin-top-right divide-y divide-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="px-1 py-1 ">
-                <Link href="/register">
+                <Link href="user/account/register">
                   <Menu.Item>
                     {({ active }) => (
                       <button
@@ -89,7 +89,7 @@ const Header = () => {
                   </Menu.Item>
                 </Link>
 
-                <Link href="/login">
+                <Link href="user/account/login">
                   <Menu.Item>
                     {({ active }) => (
                       <button

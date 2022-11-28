@@ -1,14 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import loginImage from "../assets/banner-login.png";
+
 import { FaFacebookF, FaGoogle, FaRegEnvelope } from "react-icons/fa";
 import { TbLock } from "react-icons/tb";
 import { useForm } from "react-hook-form";
 
 import toast from "react-hot-toast";
-import { getError } from "../utils/error";
-import Footer from "../components/Footer";
+import { getError } from "../../../utils/error";
+import Footer from "../../../components/Footer";
 import Head from "next/head";
 
 const LoginScreen = () => {
@@ -54,20 +54,20 @@ const LoginScreen = () => {
       <div className="w-full">
         <Image
           alt=""
-          src="https://images.unsplash.com/photo-1666360128776-1c80197203ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&dpr=1&auto=format%2Ccompress&fit=crop&w=1599&h=594"
+          src="https://i.redd.it/zv2xzph7jf2a1.jpg"
           layout="fill"
           className="object-center object-cover"
         ></Image>
       </div>
-      <main className="min-h-screen">
-        <section className="bg-white h-[550px] absolute w-[370px] md:w-[470px] right-16  mt-14 flex items-center justify-center flex-col rounded-md shadow-md">
+      <main className="max-h-screen overflow-hidden">
+        <section className="bg-white h-[450px] md:h-[500px] absolute w-[370px] md:w-[470px] left-16  mt-14 flex items-center justify-center flex-col rounded-md shadow-md">
           <div className="p-5">
             <h3 className="text-2xl font-semibold mb-2">Đăng nhập</h3>
             <form
               className="flex items-center flex-col"
               onSubmit={handleSubmit(submitHandler)}
             >
-              <div className="bg-gray-200 w-80 p-3 flex items-center my-3 rounded-2xl shadow-inner shadow-gray-400 transition duration-200 focus-within:shadow-gray-600 focus-within:scale-105">
+              <div className="bg-gray-200 w-80 p-3 flex items-center my-3 rounded-full shadow-inner shadow-gray-400 transition duration-200 focus-within:shadow-gray-600 focus-within:scale-105">
                 <label htmlFor="email"></label>
                 <FaRegEnvelope className="text-gray-400 mr-2" />
 
@@ -94,7 +94,7 @@ const LoginScreen = () => {
                 </div>
               )}
 
-              <div className="bg-gray-200 w-80 p-3 flex items-center mb-3 rounded-2xl shadow-inner shadow-gray-400 transition duration-200 focus-within:shadow-gray-600 focus-within:scale-105">
+              <div className="bg-gray-200 w-80 p-3 flex items-center mb-3 rounded-full shadow-inner shadow-gray-400 transition duration-200 focus-within:shadow-gray-600 focus-within:scale-105">
                 <TbLock className="text-gray-400 mr-2" />
                 <label htmlFor="password"></label>
                 <input
@@ -113,7 +113,7 @@ const LoginScreen = () => {
                 />
               </div>
               {errors.password && (
-                <div className="text-red-500 mb-2 w-full text-left font-medium italic inline-block duration-200 transition-all">
+                <div className="text-red-500 mb-2  w-full text-left font-medium italic inline-block duration-200 transition-all">
                   {errors.password.message}
                 </div>
               )}
@@ -132,7 +132,7 @@ const LoginScreen = () => {
 
                 <a
                   href=""
-                  className=" font-bold text-xs outline-none cursor-pointer text-red-600"
+                  className=" font-bold  text-xs outline-none cursor-pointer text-red-600"
                 >
                   Quên mật khẩu?
                 </a>
@@ -163,20 +163,14 @@ const LoginScreen = () => {
             <div className="w-full flex items-center justify-center mt-5">
               <span className="text-sm">
                 Bạn chưa có tài khoản?{" "}
-                <Link href="/register">
-                  <a href="" className="text-red-700">
-                    Đăng ký
-                  </a>
+                <Link href="register">
+                  <a className="text-red-700 underline pb-2">Đăng ký</a>
                 </Link>
               </span>
             </div>
           </div>
         </section>
       </main>
-
-      <footer>
-        <Footer></Footer>
-      </footer>
     </>
   );
 };
