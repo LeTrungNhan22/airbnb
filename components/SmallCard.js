@@ -1,25 +1,25 @@
 import Image from "next/image";
 import React from "react";
 
-const SmallCard = ({ img, distance, location }) => {
+const SmallCard = ({ img, serviceName }) => {
   return (
     <div
       className="flex items-center m-2 mt-5 space-x-4 rounded-xl cursor-pointer
-    hover:bg-gray-300 hover:scale-105 transition duration-200 ease-out 
+    hover:bg-red-100 hover:scale-105 transition duration-200 ease-out 
     "
     >
-      <div className="relative h-16 w-16">
+      <div className="relative h-16 w-16 flex items-center justify-center">
         <Image
           src={img}
-          alt="category"
-          layout="fill"
+          alt="service"
+          height={50}
+          width={50}
           loading="lazy"
-          className="rounded-lg"
+          className="rounded-md"
         />
       </div>
       <div>
-        <h2 className="font-bold ">{location}</h2>
-        <h3 className="text-gray-500">{distance}</h3>
+        <h2 className="font-bold text-sm ">{serviceName}</h2>
       </div>
     </div>
 

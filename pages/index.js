@@ -5,30 +5,19 @@ import Layout from "../components/Layout";
 import MediumCard from "../components/MediumCard";
 import SmallCard from "../components/SmallCard";
 
-export default function Home({ exploreData, cardData, categories }) {
-  const URI = "";
-  useEffect(() => {
-    const fetch = async () => {
-      const data = await axios.get(URI);
-      console.log(data);
-    };
-    fetch();
-  });
+export default function Home({ serviceData }) {
   return (
     <>
       <Layout title={`Home`}>
-        {/* <Banner /> */}
-        <main className="max-w-[1000px] mx-auto px-8 md:px-16">
+        <Banner />
+        <main className="max-w-[1000px] mx-auto px-8 md:px-16 min-h-screen">
           <section className="pt-6">
+            <h2 className="section-title">Dịch vụ </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {/* //todo */}
+              {serviceData?.map(({ img, serviceName }) => (
+                <SmallCard img={img} key={img} serviceName={serviceName} />
+              ))}
             </div>
-          </section>
-          <section className="pt-6">
-            <div
-              className="flex space-x-3 overflow-scroll scrollbar-hide
-          p-3 -ml-3"
-            ></div>
           </section>
         </main>
       </Layout>
@@ -36,7 +25,7 @@ export default function Home({ exploreData, cardData, categories }) {
   );
 }
 export async function getStaticProps() {
-  const exploreData = await fetch("https://www.jsonkeeper.com/b/4G1G").then(
+  const serviceData = await fetch("https://www.jsonkeeper.com/b/U9M4").then(
     (res) => res.json()
   );
   const cardData = await fetch("https://www.jsonkeeper.com/b/VHHT").then(
@@ -56,7 +45,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      exploreData,
+      serviceData,
       cardData,
       categories,
     },
