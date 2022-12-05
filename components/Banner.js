@@ -7,17 +7,19 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 const Banner = () => {
   return (
     <div>
-      <Image src={banner} alt="" objectFit="cover" />
+      <div className="shadow-md h-[400px]">
+        <Image src={banner} alt="" objectFit="cover" />
+      </div>
       <div className="absolute top-[17%]  w-full flex items-center justify-center">
         <div className="flex space-x-2  w-[1200px]">
-          <div className="w-2/3 shadow-md flex items-start bg-amber-100 bg-transparent cursor-pointer rounded-lg">
+          <div className="w-2/3 shadow-md flex items-start bg-gray-100  cursor-pointer rounded-lg">
             <Carousel
               autoPlay
               infiniteLoop
               showStatus={false}
               showIndicators={false}
               showThumbs={false}
-              interval={3000}
+              interval={2000}
             >
               <div>
                 <Image
@@ -52,6 +54,16 @@ const Banner = () => {
               <div>
                 <Image
                   src="https://cf.shopee.vn/file/4cb8330ad65416cee5ddcce6795d7de0_xxhdpi"
+                  alt=""
+                  loading="lazy"
+                  width={800}
+                  height={300}
+                  className="object-contain object-center"
+                ></Image>
+              </div>
+              <div>
+                <Image
+                  src="https://cf.shopee.vn/file/29fca44bafa911605e9171a74d536375_xxhdpi"
                   alt=""
                   loading="lazy"
                   width={800}

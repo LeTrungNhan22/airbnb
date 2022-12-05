@@ -16,8 +16,9 @@ function MyApp({ Component, pageProps }) {
         showOnShallow={true}
         options={{ showSpinner: false, easing: "ease" }}
       />
-
-      <Component {...pageProps} />
+      <div className="scrollbar-hide">
+        <Component {...pageProps} />
+      </div>
     </>
   );
 }
