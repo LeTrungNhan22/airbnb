@@ -12,7 +12,7 @@ const RegisterScreen = () => {
     register,
     formState: { errors },
   } = useForm();
-  const submitHandler = async ({ email, password }) => {
+  const submitHandler = async ({ email }) => {
     try {
       const result = await signIn("credentials", {
         redirect: false,
@@ -76,7 +76,7 @@ const RegisterScreen = () => {
                   type="email"
                   name="email"
                   id="email"
-                  placeholder="Email/Tên đăng nhập"
+                  placeholder="Email"
                   autoFocus
                   className="bg-gray-200 text-sm flex-1 rounded-full border-none outline-none "
                 ></input>

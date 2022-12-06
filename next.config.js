@@ -8,6 +8,7 @@ const nextConfig = {
       "images.unsplash.com",
       "i.redd.it",
       "cf.shopee.vn",
+      "assets.nintendo.com",
     ],
   },
 };

@@ -3,8 +3,9 @@ import { SessionProvider } from "next-auth/react";
 import NextNProgress from "nextjs-progressbar";
 
 import "../styles/globals.css";
+import { useRouter } from "next/router";
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <>
       <Toaster position="top-center" reverseOrder={true} />
@@ -16,24 +17,24 @@ function MyApp({ Component, pageProps }) {
         showOnShallow={true}
         options={{ showSpinner: false, easing: "ease" }}
       />
-      <div className="scrollbar-hide">
+      <SessionProvider session={session}>
         <Component {...pageProps} />
-      </div>
+      </SessionProvider>
     </>
   );
 }
-// function Auth({ children }) {
-//   const router = useRouter();
-//   const { status } = useSession({
-//     required: true,
-//     onUnauthenticated() {
-//       router.push("/unauthorized?message=login required");
-//     },
-//   });
+function Auth({ children }) {
+  const router = useRouter();
+  const { status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/unauthorized?message=login required");
+    },
+  });
 
-//   if (status === "loading") {
-//     return <div>Loading...</div>;
-//   }
-//   return children;
-// }
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+  return children;
+}
 export default MyApp;

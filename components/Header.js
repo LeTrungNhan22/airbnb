@@ -15,8 +15,10 @@ import axios from "axios";
 import { getError } from "../utils/error";
 import DialogRegister from "./DialogRegister";
 import SearchBar from "./SearchBar";
+import { signOut, useSession } from "next-auth/react";
 
 const Header = () => {
+  const { data: session, status } = useSession();
   // open model register
   let [isOpen, setIsOpen] = useState(false);
   function closeModal() {
@@ -68,64 +70,94 @@ const Header = () => {
             leaveTo="transform opacity-0 scale-95"
           >
             <Menu.Items className="absolute right-10 mt-2 w-60 origin-top-right divide-y divide-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-              <div className="px-1 py-1 ">
-                <Link href="user/account/register">
-                  <Menu.Item>
-                    {({ active }) => (
-                      <button
-                        className={`${
-                          active ? "hover-active" : "text-gray-900"
-                        } group flex w-full items-center rounded-md px-2 py-2 text-md`}
-                      >
-                        {active ? (
-                          <div className=" h-5 w-5" aria-hidden="true" />
-                        ) : (
-                          <div className=" h-5 w-5" aria-hidden="true" />
-                        )}
+              {!session?.user ? (
+                <div>
+                  <div className="px-1 py-1 ">
+                    <Link href="user/account/register">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            className={`${
+                              active ? "hover-active" : "text-gray-900"
+                            } group flex w-full items-center rounded-md px-2 py-2 text-md`}
+                          >
+                            {active ? (
+                              <div className=" h-5 w-5" aria-hidden="true" />
+                            ) : (
+                              <div className=" h-5 w-5" aria-hidden="true" />
+                            )}
 
-                        <p className="font-semibold">Đăng ký</p>
-                      </button>
-                    )}
-                  </Menu.Item>
-                </Link>
-
-                <Link href="user/account/login">
-                  <Menu.Item>
-                    {({ active }) => (
-                      <button
-                        className={`${
-                          active ? "hover-active" : "text-gray-900"
-                        } group flex w-full items-center rounded-md px-2 py-2 text-md`}
-                      >
-                        {active ? (
-                          <div className=" h-5 w-5" aria-hidden="true" />
-                        ) : (
-                          <div className=" h-5 w-5" aria-hidden="true" />
+                            <p className="font-semibold">Đăng ký</p>
+                          </button>
                         )}
-                        Đăng nhập
-                      </button>
-                    )}
-                  </Menu.Item>
-                </Link>
-              </div>
-              <div className="px-1 py-1">
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={`${
-                        active ? "hover-active" : "text-gray-900"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-md`}
-                    >
-                      {active ? (
-                        <div className=" h-5 w-5" aria-hidden="true" />
-                      ) : (
-                        <div className=" h-5 w-5" aria-hidden="true" />
+                      </Menu.Item>
+                    </Link>
+
+                    <Link href="user/account/login">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            className={`${
+                              active ? "hover-active" : "text-gray-900"
+                            } group flex w-full items-center rounded-md px-2 py-2 text-md`}
+                          >
+                            {active ? (
+                              <div className=" h-5 w-5" aria-hidden="true" />
+                            ) : (
+                              <div className=" h-5 w-5" aria-hidden="true" />
+                            )}
+                            Đăng nhập
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </Link>
+                  </div>
+                  <div className="px-1 py-1">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          className={`${
+                            active ? "hover-active" : "text-gray-900"
+                          } group flex w-full items-center rounded-md px-2 py-2 text-md`}
+                        >
+                          {active ? (
+                            <div className=" h-5 w-5" aria-hidden="true" />
+                          ) : (
+                            <div className=" h-5 w-5" aria-hidden="true" />
+                          )}
+                          Kênh người bán
+                        </button>
                       )}
-                      Kênh người bán
-                    </button>
-                  )}
-                </Menu.Item>
-              </div>
+                    </Menu.Item>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div>
+                    <span>Hello {session.user.name}</span>
+                  </div>
+                  <div className="px-1 py-1">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          onClick={signOut}
+                          className={`${
+                            active ? "hover-active" : "text-gray-900"
+                          } group flex w-full items-center rounded-md px-2 py-2 text-md`}
+                        >
+                          {active ? (
+                            <div className=" h-5 w-5" aria-hidden="true" />
+                          ) : (
+                            <div className=" h-5 w-5" aria-hidden="true" />
+                          )}
+                          Đăng xuất
+                        </button>
+                      )}
+                    </Menu.Item>
+                  </div>
+                </div>
+              )}
+
               <div className="px-1 py-1">
                 <Menu.Item>
                   {({ active }) => (

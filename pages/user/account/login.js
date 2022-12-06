@@ -5,6 +5,7 @@ import React from "react";
 import { FaFacebookF, FaGoogle, FaRegEnvelope } from "react-icons/fa";
 import { TbLock } from "react-icons/tb";
 import { useForm } from "react-hook-form";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 import toast from "react-hot-toast";
 import { getError } from "../../../utils/error";
@@ -12,6 +13,9 @@ import Footer from "../../../components/Footer";
 import Head from "next/head";
 
 const LoginScreen = () => {
+  const { data: session, status } = useSession();
+  console.log("Session:", session);
+  console.log("Status:", status);
   const {
     handleSubmit,
     register,
@@ -156,9 +160,12 @@ const LoginScreen = () => {
               <a className="border-2 cursor-pointer text-red-600 shadow-lg hover:text-blue-600  hover:scale-105  duration-300 transition border-gray-400 rounded-full p-3 mx-1">
                 <FaFacebookF className="text-2xl" />
               </a>
-              <a className="border-2 cursor-pointer text-red-600 shadow-lg hover:scale-105 hover:text-green-500  duration-300 transition  border-gray-400 rounded-full p-3 mx-1">
+              <button
+                onClick={!session ? signIn : signOut}
+                className="border-2 cursor-pointer text-red-600 shadow-lg hover:scale-105 hover:text-green-500  duration-300 transition  border-gray-400 rounded-full p-3 mx-1"
+              >
                 <FaGoogle className="text-2xl" />
-              </a>
+              </button>
             </div>
             <div className="w-full flex items-center justify-center mt-5">
               <span className="text-sm">
