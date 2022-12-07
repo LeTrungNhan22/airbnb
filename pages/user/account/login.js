@@ -1,39 +1,62 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { FaFacebookF, FaGoogle, FaRegEnvelope } from "react-icons/fa";
 import { TbLock } from "react-icons/tb";
 import { useForm } from "react-hook-form";
 import { useSession, signIn, signOut } from "next-auth/react";
+import Head from "next/head";
+import axios from "axios";
 
 import toast from "react-hot-toast";
 import { getError } from "../../../utils/error";
 import Footer from "../../../components/Footer";
-import Head from "next/head";
 
 const LoginScreen = () => {
   const { data: session, status } = useSession();
-  console.log("Session:", session);
-  console.log("Status:", status);
+  var base64 = require("base-64");
+  //Login normally
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
-
+  // todo handle submit
   const submitHandler = async ({ email, password }) => {
     try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
-      });
+      const result = await axios({
+        method: "post",
+        url: "http://localhost:8040/ecommerce-floor/user/1.0.0/login/customer",
+        params: {
+          email: email,
+          password: base64.encode(password),
+          "full-name": "null",
+          image: "null",
+          "service-type": "NORMALLY",
+        },
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.ok) {
+            return response.json();
+          }
+          throw Error(response.status);
+        })
+        .then((result) => {
+          console.log(result);
+          localStorage.setItem("userToken", result.data);
+          toast.success("Dang nhập thành công");
+        })
+        .catch((error) => {
+          console.log("error", error);
+          toast.error("Username or password are wrong");
+        });
       if (result.error) {
         toast.error(result.error);
       }
-    } catch (err) {
-      toast.error(getError(err));
+    } catch (error) {
+      console.log(getError(error));
     }
   };
   return (
@@ -55,18 +78,12 @@ const LoginScreen = () => {
           <p>Bạn cần hỗ trợ?</p>
         </div>
       </header>
-      <div className="w-full">
-        <Image
-          alt=""
-          src="https://i.redd.it/zv2xzph7jf2a1.jpg"
-          layout="fill"
-          className="object-center object-cover"
-        ></Image>
-      </div>
-      <main className="max-h-screen overflow-hidden">
-        <section className="bg-white h-[450px] md:h-[500px] absolute w-[370px] md:w-[470px] left-16  mt-14 flex items-center justify-center flex-col rounded-md shadow-md">
+      <main className="min-h-screen overflow-hidden bg-gray-200 ">
+        <section className="bg-white h-[450px] md:h-[500px]  w-[370px] md:w-[470px]  mx-auto my-10  rounded-md shadow-md">
           <div className="p-5">
-            <h3 className="text-2xl font-semibold mb-2">Đăng nhập</h3>
+            <h3 className="text-2xl font-semibold mb-2 flex items-center justify-center">
+              Đăng nhập
+            </h3>
             <form
               className="flex items-center flex-col"
               onSubmit={handleSubmit(submitHandler)}
@@ -157,11 +174,14 @@ const LoginScreen = () => {
               <hr className="w-1/2" />
             </div>
             <div className="flex justify-center my-2">
-              <a className="border-2 cursor-pointer text-red-600 shadow-lg hover:text-blue-600  hover:scale-105  duration-300 transition border-gray-400 rounded-full p-3 mx-1">
-                <FaFacebookF className="text-2xl" />
-              </a>
               <button
-                onClick={!session ? signIn : signOut}
+                onClick={signIn}
+                className="border-2 cursor-pointer text-red-600 shadow-lg hover:text-blue-600  hover:scale-105  duration-300 transition border-gray-400 rounded-full p-3 mx-1"
+              >
+                <FaFacebookF className="text-2xl" />
+              </button>
+              <button
+                onClick={signIn}
                 className="border-2 cursor-pointer text-red-600 shadow-lg hover:scale-105 hover:text-green-500  duration-300 transition  border-gray-400 rounded-full p-3 mx-1"
               >
                 <FaGoogle className="text-2xl" />
@@ -178,6 +198,7 @@ const LoginScreen = () => {
           </div>
         </section>
       </main>
+      s
     </>
   );
 };

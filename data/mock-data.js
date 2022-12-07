@@ -53,7 +53,7 @@ export const dataDigitalBestSeller = [
     price: "$59.99",
     category: "Nintendo Switch",
     linkImg:
-      "https://assets.nintendo.com/image/upload/ar_16:9,b_auto:border,c_lpad/b_white/f_auto/q_auto/dpr_auto/c_scale,w_300/v1/ncom/en_US/games/switch/m/mario-plus-rabbids-kingdom-battle-switch/hero?_a=AJADJWI0",
+      "https://assets.nintendo.com/image/upload/ar_16:9,b_auto:border,c_lpad/b_white/f_auto/q_auto/dpr_1.25/c_scale,w_300/ncom/en_US/games/switch/f/fire-emblem-warriors-three-hopes-switch/hero",
   },
   {
     id: 8,

@@ -38,7 +38,7 @@ const Advisement = () => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full cursor-pointer max-w-md transform overflow-hidden rounded-2xl bg-transparent p-6 text-left align-middle  transition-all">
+                <Dialog.Panel className="w-full cursor-pointer max-w-md transform overflow-hidden rounded-2xl bg-transparent p-6 text-left align-middle  transition-all mt-10">
                   <div className="mt-12">
                     <Image
                       src={advisement}
