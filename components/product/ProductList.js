@@ -76,12 +76,11 @@ const ProductList = () => {
                     <div className="text-xs text-gray-500 ml-2">(100)</div>
                   </div>
                 </div>
-                <a
-                  href=""
-                  className=" flex items-center justify-center mx-4 py-1 text-center text-white bg-gradient-to-r from-[#626262] to-[#9DC5C3]  rounded hover:bg-transparent hover:text-gray-500 transition"
-                >
-                  Xem thêm
-                </a>
+                <Link href="/shop">
+                  <a className=" flex items-center justify-center mx-4 py-1 text-center text-white bg-gradient-to-r from-[#626262] to-[#9DC5C3]  rounded hover:bg-transparent hover:text-gray-500 transition">
+                    Xem thêm
+                  </a>
+                </Link>
               </div>
             )
           )}

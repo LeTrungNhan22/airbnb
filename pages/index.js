@@ -67,7 +67,6 @@ export default function Home({ serviceData, categoryData }) {
         </main>
         {/* recommend */}
         {/* category list */}
-        <Footer />
       </Layout>
       {/* advisement */}
       <Advisement />

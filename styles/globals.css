@@ -23,7 +23,7 @@ body {
 ::-webkit-scrollbar {
   width: 0;
 }
-
+/* base */
 @layer base {
   .section-title {
     @apply text-4xl font-semibold;
@@ -32,6 +32,16 @@ body {
     @apply bg-gray-100 transition duration-100 cursor-pointer;
   }
 }
+
+@layer components {
+  .size-selector input:checked + label {
+    @apply bg-rose-600 text-white;
+  }
+  .color-selector input:checked + label {
+    @apply ring-2 ring-rose-600;
+  }
+}
+
 .slick-slide > div {
   margin: 0 10px;
 }
