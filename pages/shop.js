@@ -15,7 +15,10 @@ const ShopScreen = () => {
   return (
     <Layout title={`Shops`}>
       <section className="bg-gray-300 ">
-        <BreadCrumb />
+        <div className="w-[1400px]">
+          <BreadCrumb />
+        </div>
+
         <main className="w-[1400px] mx-auto grid grid-cols-4 gap-6 pt-2 items-start">
           {/* sidebar */}
           <div className="col-span-1 bg-white px-4 pb-6 shadow border border-gray-200 rounded overflow-hidden mb-3">
