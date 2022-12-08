@@ -12,9 +12,11 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { getError } from "../../../utils/error";
 import Footer from "../../../components/Footer";
+import { useRouter } from "next/router";
 
 const LoginScreen = () => {
   const { data: session, status } = useSession();
+  const router = useRouter();
   var base64 = require("base-64");
   //Login normally
   const {
@@ -25,36 +27,31 @@ const LoginScreen = () => {
   // todo handle submit
   const submitHandler = async ({ email, password }) => {
     try {
-      const result = await axios({
-        method: "post",
-        url: "http://localhost:8040/ecommerce-floor/user/1.0.0/login/customer",
-        params: {
-          email: email,
-          password: base64.encode(password),
-          "full-name": "null",
-          image: "null",
-          "service-type": "NORMALLY",
-        },
-      })
-        .then((response) => {
-          console.log(response);
-          if (response.ok) {
-            return response.json();
+      await axios
+        .post(
+          "http://localhost:8040/ecommerce-floor/user/1.0.0/login/customer",
+          null,
+          {
+            params: {
+              email: email,
+              password: base64.encode(password),
+              "full-name": "null",
+              image: "null",
+              "service-type": "NORMALLY",
+            },
           }
-          throw Error(response.status);
-        })
-        .then((result) => {
-          console.log(result);
-          localStorage.setItem("userToken", result.data);
-          toast.success("Dang nhập thành công");
-        })
-        .catch((error) => {
-          console.log("error", error);
-          toast.error("Username or password are wrong");
+        )
+        .then(function (result) {
+          if (result.data.status == "success") {
+            localStorage.setItem("userToken", result.data.data);
+            toast.success("Đăng nhập thành công");
+            router.push("/");
+          } else {
+            toast.error(
+              "Đăng nhập không thành công tài khoản hoặc mật khẩu không chính xác"
+            );
+          }
         });
-      if (result.error) {
-        toast.error(result.error);
-      }
     } catch (error) {
       console.log(getError(error));
     }
@@ -198,7 +195,6 @@ const LoginScreen = () => {
           </div>
         </section>
       </main>
-      s
     </>
   );
 };

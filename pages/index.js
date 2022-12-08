@@ -79,15 +79,12 @@ export async function getStaticProps() {
   const serviceData = await fetch("https://www.jsonkeeper.com/b/U9M4").then(
     (res) => res.json()
   );
-
   const categoryData = await fetch("https://www.jsonkeeper.com/b/N41Q").then(
     (res) => res.json()
   );
-
   return {
     props: {
       serviceData,
-
       categoryData,
     },
   };
