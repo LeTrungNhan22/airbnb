@@ -64,10 +64,10 @@ export default function ProductScreen() {
   return (
     <>
       <Layout title={product.title}>
-        <div className="bg-gray-400 ">
-          <BreadCrumb />
+        <div className="bg-gray-300 pb-10 ">
+          <BreadCrumb title={product.title} pid={id} />
           <section>
-            <div className=" w-[1400px] mb-3 grid grid-cols-2 gap-6  mx-auto bg-white p-4 rounded shadow">
+            <div className=" w-[1200px] mb-3 grid grid-cols-2 gap-6  mx-auto bg-white p-4 rounded shadow">
               {/* product image */}
               <div className="flex items-center justify-center">
                 <Image
@@ -344,7 +344,7 @@ export default function ProductScreen() {
           </section>
 
           <section>
-            <div className=" w-[1400px]  grid grid-cols-3 gap-6  mx-auto bg-white p-4 rounded shadow">
+            <div className=" w-[1200px] mb-3 grid grid-cols-3 gap-6  mx-auto bg-white p-4 rounded shadow">
               <div className="container flex col-span-1 py-2 px-4 space-x-3 border-r border-gray-200">
                 <div>
                   <Image
@@ -424,6 +424,13 @@ export default function ProductScreen() {
               </div>
             </div>
           </section>
+          {/* product detail */}
+          <section>
+            <div className=" w-[1200px]  mx-auto   bg-white p-4 pb-16 rounded shadow">
+              <h3>Chi tiết sản phẩm</h3>
+            </div>
+          </section>
+          {/* product detail end */}
         </div>
       </Layout>
     </>

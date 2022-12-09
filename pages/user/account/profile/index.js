@@ -4,11 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import Layout from "../../../../components/Layout";
 import logo from "../../../../assets/Avatar.png";
+import BreadCrumb from "../../../../components/BreadCrumb";
 
 const UserProfileScreen = () => {
   return (
     <Layout title={`Profile`}>
-      <div className="bg-gray-200  ">
+      <div className="bg-gray-300 pb-9  ">
+        <BreadCrumb title={`Profile`} />
         <div className=" bg-gray-200 min-h-screen max-w-screen-xl mx-auto py-10">
           <div className="flex flex-row p-3">
             <div className="flex flex-col w-1/4">
@@ -85,9 +87,7 @@ const UserProfileScreen = () => {
           </div>
         </div>
       </div>
-      
     </Layout>
-    
   );
 };
 

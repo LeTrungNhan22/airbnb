@@ -3,7 +3,7 @@ import React from "react";
 import { dataDigitalBestSeller } from "../../data/mock-data";
 import { AiOutlineSearch } from "react-icons/ai";
 import { HeartIcon } from "@heroicons/react/24/outline";
-import { FaHeart, FaStar } from "react-icons/fa";
+import { FaHeart, FaShopify, FaStar } from "react-icons/fa";
 import Link from "next/link";
 
 const ProductList = () => {
@@ -14,7 +14,7 @@ const ProductList = () => {
           {dataDigitalBestSeller.map(
             ({ id, title, price, category, linkImg }) => (
               <div
-                className="bg-white shadow-md rounded overflow-hidden group p-3"
+                className="bg-white shadow-md rounded overflow-hidden group p-3 hover:shadow-xl transition"
                 key={id}
               >
                 <div className="relative h-[150px]">
@@ -77,9 +77,16 @@ const ProductList = () => {
                   </div>
                 </div>
                 <Link href="/shop">
-                  <a className=" flex items-center justify-center mx-4 py-1 text-center text-white bg-gradient-to-r from-[#626262] to-[#9DC5C3]  rounded hover:bg-transparent hover:text-gray-500 transition">
-                    Xem thêm
-                  </a>
+                  <div
+                    href="#_"
+                    className="cursor-pointer rounded px-3 py-2 overflow-hidden group bg-white-300 relative hover:bg-gradient-to-r hover:from-gray-800 hover:to-white text-black hover:ring-2 hover:ring-offset-2 hover:ring-black transition-all ease-out duration-300 border border-black"
+                  >
+                    <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+                    <div className="flex items-center justify-center space-x-2 text-white-600 hover:text-black">
+                      <FaShopify />
+                      <span className="relative">Chi tiết</span>
+                    </div>
+                  </div>
                 </Link>
               </div>
             )
