@@ -12,11 +12,8 @@ const BreadCrumb = ({ pid, title }) => {
             <FaHome />
           </a>
         </Link>
-        <span className="text-sm text-gray-100">
-          <FaChevronRight />
-        </span>
-        <p className="text-gray-800 font-medium">Product view</p>
-        <span className="text-sm text-gray-100">
+
+        <span className="text-sm text-gray-00">
           <FaChevronRight />
         </span>
         <Link href={`/product/${pid}`}>

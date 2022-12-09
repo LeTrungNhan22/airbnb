@@ -16,7 +16,7 @@ const ShopScreen = () => {
     <Layout title={`Shops`}>
       <section className="bg-gray-300 ">
         <div className="w-[1400px]">
-          <BreadCrumb />
+          <BreadCrumb title={`Shop now`} />
         </div>
 
         <main className="w-[1400px] mx-auto grid grid-cols-4 gap-6 pt-2 items-start">

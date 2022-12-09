@@ -46,9 +46,12 @@ const Header = () => {
       <SearchBar />
 
       <div className="items-center space-x-1 justify-end hidden md:flex">
-        <div className="text-gray-700 lg:text-lg md:text-sm flex items-center hover:bg-gray-100 p-1  rounded-full transition duration-200 cursor-pointer">
-          <ShoppingCartIcon className="h-10 p-2 hover:bg-gray-100 rounded-full transition duration-200 cursor-pointer" />
-        </div>
+        <Link href="/cart">
+          <a className="text-gray-700 lg:text-lg md:text-sm flex items-center hover:bg-gray-100 p-1  rounded-full transition duration-200 cursor-pointer">
+            <ShoppingCartIcon className="h-10 p-2 hover:bg-gray-100 rounded-full transition duration-200 cursor-pointer" />
+          </a>
+        </Link>
+
         <div className="text-gray-700 lg:text-lg md:text-sm flex items-center hover:bg-gray-100 p-1  rounded-full transition duration-200 cursor-pointer">
           <BellAlertIcon className="h-10 p-2 hover:bg-gray-100 rounded-full transition duration-200 cursor-pointer" />
         </div>
@@ -73,7 +76,7 @@ const Header = () => {
               {!session?.user ? (
                 <div>
                   <div className="px-1 py-1 ">
-                    <Link href="user/account/register">
+                    <Link href="/user/account/register">
                       <Menu.Item>
                         {({ active }) => (
                           <button
@@ -93,7 +96,7 @@ const Header = () => {
                       </Menu.Item>
                     </Link>
 
-                    <Link href="user/account/login">
+                    <Link href="/user/account/login">
                       <Menu.Item>
                         {({ active }) => (
                           <button

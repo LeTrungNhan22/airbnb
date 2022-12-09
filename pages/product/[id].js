@@ -20,6 +20,7 @@ import BreadCrumb from "../../components/BreadCrumb";
 import Layout from "../../components/Layout";
 import { dataDigitalBestSeller } from "../../data/mock-data";
 import { AiFillMessage } from "react-icons/ai";
+import ProductList from "../../components/product/ProductList";
 
 export default function ProductScreen() {
   const router = useRouter();
@@ -427,7 +428,63 @@ export default function ProductScreen() {
           {/* product detail */}
           <section>
             <div className=" w-[1200px]  mx-auto   bg-white p-4 pb-16 rounded shadow">
-              <h3>Chi tiết sản phẩm</h3>
+              <div className="container pb-6 px-6">
+                <h3 className="border-b border-gray-200  text-gray-800 pb-3 font-medium text-3xl">
+                  Chi tiết sản phẩm
+                </h3>
+                <div className="w-3/5 pt-6">
+                  <div className="text-gray-600 space-y-3">
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Pariatur corporis ullam, voluptatum quam nisi facere
+                      consequatur soluta reiciendis voluptates sequi quis
+                      architecto quas nemo illo repellat laudantium expedita
+                      asperiores. Quod!
+                    </p>
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Sunt repellendus ex velit voluptates aspernatur numquam
+                      minima tempore libero soluta doloremque voluptatum
+                      eligendi officia repellat, itaque laborum repudiandae
+                      totam sed perspiciatis.
+                    </p>
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                      Numquam, soluta tempora! Enim veniam dolores assumenda
+                      consectetur sed voluptas eos maxime inventore ducimus
+                      magnam iure nam odio illum, cupiditate qui animi?
+                    </p>
+                  </div>
+                  <table className="table-auto border-collapse w-full text-left my-2">
+                    <tr>
+                      <th className="py-2 px-2 border border-gray-200 w-40 font-medium">
+                        Loại sản phẩm
+                      </th>
+                      <th className="py-2 px-2 border border-gray-200 w-40 font-medium">
+                        {product.title}
+                      </th>
+                    </tr>
+                    <tr>
+                      <th className="py-2 px-2 border border-gray-200 w-40 font-medium">
+                        Vị trí
+                      </th>
+                      <th className="py-2 px-2 border border-gray-200 w-40 font-medium">
+                        {product.location}
+                      </th>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section>
+            <div className=" w-[1200px]  mx-auto mt-5  bg-gray-200 p-4 pb-16 rounded shadow">
+              <div className="container pb-6 px-6">
+                <h3 className="border-b border-rose-600  text-gray-800 pb-3 font-medium text-3xl">
+                  Liên quan
+                </h3>
+                <ProductList />
+              </div>
             </div>
           </section>
           {/* product detail end */}
