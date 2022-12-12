@@ -275,7 +275,7 @@ const CartScreen = () => {
               </div>
 
               {/* voucher */}
-              <div className="w-full border-b mb-3 py-3 flex items-end justify-end col-span-4 space-x-10">
+              <div className="w-full border-b mb-3 py-1 flex items-end justify-end col-span-4 space-x-10">
                 <span>
                   Tổng thanh toán (1 sản phẩm) :
                   <span className="text-rose-600 text-4xl"> đ258.000</span>

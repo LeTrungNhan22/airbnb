@@ -27,7 +27,8 @@ const LoginScreen = () => {
     formState: { errors },
   } = useForm();
   // todo handle submit
-  const submitHandler = async ({ email, password }) => {
+  const submitHandler = async ({ email, password }, e) => {
+    e.preventDefault();
     try {
       await axios
         .post(`${apiUrl}/user/1.0.0/login/customer`, null, {
@@ -83,7 +84,7 @@ const LoginScreen = () => {
               className="flex items-center flex-col"
               onSubmit={handleSubmit(submitHandler)}
             >
-              <div className="bg-gray-200 w-80 p-3 flex items-center my-3 rounded-full shadow-inner shadow-gray-400 transition duration-200 focus-within:shadow-gray-600 focus-within:scale-105">
+              <div className="bg-gray-200 w-80 p-2 flex items-center my-3 rounded shadow-inner shadow-gray-400 transition duration-200 focus-within:shadow-gray-600 focus-within:scale-105">
                 <label htmlFor="email"></label>
                 <FaRegEnvelope className="text-gray-400 mr-2" />
 
@@ -100,7 +101,7 @@ const LoginScreen = () => {
                   id="email"
                   placeholder="Email/Tên đăng nhập"
                   autoFocus
-                  className="bg-gray-200 text-sm flex-1 rounded-full border-none outline-none "
+                  className="bg-gray-200 text-sm flex-1 rounded border-none outline-none "
                 ></input>
               </div>
 
@@ -110,7 +111,7 @@ const LoginScreen = () => {
                 </div>
               )}
 
-              <div className="bg-gray-200 w-80 p-3 flex items-center mb-3 rounded-full shadow-inner shadow-gray-400 transition duration-200 focus-within:shadow-gray-600 focus-within:scale-105">
+              <div className="bg-gray-200 w-80 p-2 flex items-center mb-3 rounded shadow-inner shadow-gray-400 transition duration-200 focus-within:shadow-gray-600 focus-within:scale-105">
                 <TbLock className="text-gray-400 mr-2" />
                 <label htmlFor="password"></label>
                 <input
@@ -125,7 +126,7 @@ const LoginScreen = () => {
                   name="password"
                   id="password"
                   placeholder="Password"
-                  className="bg-gray-200 text-sm flex-1 rounded-full border-none outline-none "
+                  className="bg-gray-200 text-sm flex-1 rounded border-none outline-none "
                 />
               </div>
               {errors.password && (
@@ -157,18 +158,18 @@ const LoginScreen = () => {
               <button>
                 <div
                   href=""
-                  className="font-semibold w-80 hover:scale-105 hover:bg-red-500 hover:text-white duration-300 transition shadow-md border-2 border-red-500 rounded-full px-12 py-2 inline-block"
+                  className="font-semibold w-80 hover:scale-105 hover:bg-red-500 hover:text-white duration-300 transition shadow-md border-2 border-red-500 rounded px-12 py-2 inline-block"
                 >
                   Đăng nhập
                 </div>
               </button>
             </form>
-            <div className="my-8 flex items-center space-x-2">
+            <div className="mt-8 mb-5 flex items-center space-x-2">
               <hr className="w-1/2" />
               <span className="text-sm">Hoặc</span>
               <hr className="w-1/2" />
             </div>
-            <div className="flex justify-center my-2">
+            <div className="flex justify-center ">
               <button
                 onClick={signIn}
                 className="border-2 cursor-pointer text-red-600 shadow-lg hover:text-blue-600  hover:scale-105  duration-300 transition border-gray-400 rounded-full p-3 mx-1"

@@ -6,13 +6,23 @@ import { HeartIcon } from "@heroicons/react/24/outline";
 import { FaHeart, FaShopify, FaStar } from "react-icons/fa";
 import Link from "next/link";
 
-const ProductList = () => {
+const ProductList = ({ productFilter }) => {
+  const { resultList } = productFilter;
+  console.log(resultList);
   return (
     <>
       <div className="container pb-16 my-7">
         <div className="grid grid-cols-4 gap-6">
-          {dataDigitalBestSeller.map(
-            ({ id, title, price, category, linkImg }) => (
+          {resultList?.map(
+            ({
+              description,
+              featuredImageUrl,
+              industrialTypeName,
+              mediumPrice,
+              name,
+
+              id,
+            }) => (
               <div
                 className="bg-white shadow-md rounded overflow-hidden group p-3 hover:shadow-xl transition"
                 key={id}
@@ -20,8 +30,8 @@ const ProductList = () => {
                 <div className="relative h-[150px]">
                   <div>
                     <Image
-                      src={linkImg}
-                      alt={title}
+                      src={featuredImageUrl}
+                      alt={name}
                       layout="fill"
                       className=" rounded object-fit object-center"
                     />
@@ -45,15 +55,18 @@ const ProductList = () => {
                 <div className="pt-4 pb-3 px-4">
                   <a>
                     <div className="uppercase line-clamp-1 font-medium text-sm  text-gray-800 hover:text-red-600 transition">
-                      {title}
+                      {name}
                     </div>
                   </a>
 
                   <div className="flex items-baseline space-x-2">
                     <p className="text-xl text-rose-600 font-semibold">
-                      {price}
+                      {mediumPrice.amount} {mediumPrice.currencyCode}
                     </p>
-                    <p className="text-gray-500 line-through">{price}</p>
+                    <p className="text-gray-500 line-through">
+                      {" "}
+                      {mediumPrice.amount}{" "}
+                    </p>
                   </div>
                   <div className="flex items-center">
                     <div className="flex gap-1 text-sm text-yellow-400">

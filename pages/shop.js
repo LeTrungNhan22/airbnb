@@ -11,7 +11,6 @@ import { dataDigitalBestSeller } from "../data/mock-data";
 
 const ShopScreen = () => {
   const uniqueArr = [...new Set(dataDigitalBestSeller)];
-
   return (
     <Layout title={`Shops`}>
       <section className="bg-gray-300 ">

@@ -1,90 +1,79 @@
-import { Disclosure } from "@headlessui/react";
-import { ChevronUpIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import Layout from "../../../../components/Layout";
-import logo from "../../../../assets/Avatar.png";
+import { userAgent } from "next/server";
+import { useContext } from "react";
 import BreadCrumb from "../../../../components/BreadCrumb";
+import Layout from "../../../../components/Layout";
+import SideBar from "../../../../components/user-profile/SideBar";
+import AuthContext from "../../../../utils/User";
+// -----------------------------------
 
 const UserProfileScreen = () => {
+  const { user, logout, isLogin } = useContext(AuthContext);
   return (
     <Layout title={`Profile`}>
-      <div className="bg-gray-300 pb-9  ">
+      <div className="bg-gray-300">
         <BreadCrumb title={`Profile`} />
-        <div className=" bg-gray-200 min-h-screen max-w-screen-xl mx-auto py-10">
-          <div className="flex flex-row p-3">
-            <div className="flex flex-col w-1/4">
-              <div className="flex items-center  justify-center border-b-2 border-gray-500 mx-2 pb-5">
-                <Image
-                  src={logo}
-                  alt=""
-                  height={70}
-                  width={70}
-                  objectFit
-                  className=" object-cover rounded-full cursor-pointer"
-                ></Image>
-                <div className="flex flex-col mx-3 space-y-2">
-                  <span className="text-sm font-semibold">LeTrungNhan</span>
-                  <button className="text-xs text-gray-700 font-thin">
-                    Chỉnh sửa hồ sơ
-                  </button>
-                </div>
-              </div>
-              <div className="w-full px-4 pt-10">
-                <div className="mx-auto w-full max-w-md rounded-2xl bg-white p-2">
-                  <Disclosure>
-                    {({ open }) => (
-                      <>
-                        <Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-100 px-4 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75">
-                          <span>Tài khoản của tôi</span>
-                          <ChevronUpIcon
-                            className={`${
-                              open ? "rotate-180 transform" : ""
-                            } h-5 w-5 text-gray-500`}
-                          />
-                        </Disclosure.Button>
-                        <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                          <div className="flex flex-col space-y-3 items-start ml-5">
-                            <Link href="/user/account/profile">
-                              <a>
-                                <button>Hồ sơ</button>
-                              </a>
-                            </Link>
-                            <Link href="/user/account/payment">
-                              <a>
-                                <button>Ngân hàng</button>
-                              </a>
-                            </Link>
+        <div className="w-[1200px] grid grid-cols-12 items-start gap-6 pt-4 pb-16 mx-auto">
+          {/* sidebar */}
+          <div className="col-span-3">
+            <SideBar />
+          </div>
+          {/* sidebar */}
 
-                            <button>Địa chỉ</button>
-                            <button>Mật khẩu</button>
-                          </div>
-                        </Disclosure.Panel>
-                      </>
-                    )}
-                  </Disclosure>
-                  <Disclosure as="div" className="mt-2">
-                    {({ open }) => (
-                      <>
-                        <Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-100 px-4 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75">
-                          <span>Thông báo</span>
-                          <ChevronUpIcon
-                            className={`${
-                              open ? "rotate-180 transform" : ""
-                            } h-5 w-5 text-gray-500`}
-                          />
-                        </Disclosure.Button>
-                        <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                          Cập nhật đơn hàng
-                        </Disclosure.Panel>
-                      </>
-                    )}
-                  </Disclosure>
-                </div>
+          {/* profile info */}
+          <div className="col-span-9 grid md:grid-cols-3 gap-4 mt-6 lg:mt-0">
+            <div className="shadow rounded bg-white px-4 pt-6 pb-8">
+              <div className="flex justify-between items center mb-4">
+                <h3 className="font-medium capitalize text-gray-800 text-lg">
+                  Thông tin cá nhân
+                </h3>
+                <Link href="/">
+                  <a className="text-rose-500">Chỉnh sửa</a>
+                </Link>
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-gray-700 font-medium">{user.fullName}</h4>
+                <p className="text-gray-800">{user.email}</p>
+                <p className="text-gray-800">{user.telephone}</p>
               </div>
             </div>
-            <div className="bg-white h-[500px] w-full mx-5 shadow-md rounded-md"></div>
+
+            <div className="shadow rounded bg-white px-4 pt-6 pb-8">
+              <div className="flex justify-between items center mb-4">
+                <h3 className="font-medium capitalize text-gray-800 text-lg">
+                  Địa chỉ giao hàng
+                </h3>
+                <Link href="/user/account/address">
+                  <a className="text-rose-500">Chỉnh sửa</a>
+                </Link>
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-gray-700 font-medium">{user.fullName}</h4>
+                <p className="text-gray-800">{user.address.address1}</p>
+
+                <p className="text-gray-800">{user.telephone}</p>
+              </div>
+            </div>
+
+            {/* <div className="shadow rounded bg-white px-4 pt-6 pb-8">
+              <div className="flex justify-between items center mb-4">
+                <h3 className="font-medium capitalize text-gray-800 text-lg">
+                  Billing Address
+                </h3>
+                <a href="#" className="text-rose-500">
+                  Chỉnh sửa
+                </a>
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-gray-700 font-medium">Russell Ahmed</h4>
+                <p className="text-gray-800">3891 Ranchview Dr.</p>
+                <p className="text-gray-800">Richardson, Califora</p>
+                <p className="text-gray-800">(123) 456-789</p>
+              </div>
+            </div> */}
           </div>
+          {/* profile info */}
         </div>
       </div>
     </Layout>

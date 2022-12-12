@@ -2,8 +2,9 @@ import React from "react";
 import BreadCrumb from "../../../../components/BreadCrumb";
 import Layout from "../../../../components/Layout";
 import SideBar from "../../../../components/user-profile/SideBar";
+import UserAddress from "../../../../components/user-profile/UserAddress";
 
-const BankScreen = () => {
+const UserAddressScreen = () => {
   return (
     <Layout title={`Profile`}>
       <div className="bg-gray-300">
@@ -17,9 +18,7 @@ const BankScreen = () => {
 
           {/* profile info */}
           <div class="col-span-9 grid md:grid-cols-3 gap-4 mt-6 lg:mt-0">
-        <p>
-          day laf man hinh ngan hang
-        </p>
+            <UserAddress />
           </div>
           {/* profile info */}
         </div>
@@ -28,4 +27,4 @@ const BankScreen = () => {
   );
 };
 
-export default BankScreen;
+export default UserAddressScreen;

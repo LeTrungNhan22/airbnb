@@ -9,6 +9,10 @@ const nextConfig = {
       "i.redd.it",
       "cf.shopee.vn",
       "assets.nintendo.com",
+      "scontent.fsgn2-6.fna.fbcdn.net",
+      "ui-avatars.com",
+      "www.google.com",
+      "product.hstatic.net",
     ],
   },
 };

@@ -11,8 +11,37 @@ import Footer from "../components/Footer";
 import Layout from "../components/Layout";
 import Advisement from "../components/Advisement";
 import ProductList from "../components/product/ProductList";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import { getError } from "../utils/error";
 
 export default function Home({ serviceData, categoryData }) {
+  const basUrl = process.env.NEXT_PUBLIC_API_URL;
+  const [productFilter, setProductFilter] = useState({});
+  useEffect(() => {
+    const getProductFilter = async () => {
+      try {
+        await axios
+          .post(`${basUrl}/product/1.0.0/product/filter`, {
+            headers: {
+              "Content-Type": "application/json",
+              charset: "utf-8",
+            },
+          })
+          .then(function (response) {
+            const { data } = response;
+            setProductFilter(data);
+          })
+          .catch(function (error) {
+            console.error(getError(error));
+          });
+      } catch (error) {
+        console.log(getError(error));
+      }
+    };
+    getProductFilter();
+    console.log(productFilter);
+  }, []);
   // slideShow
   const settings = {
     className: "slider variable-width",
@@ -62,7 +91,7 @@ export default function Home({ serviceData, categoryData }) {
         <main className="max-w-[1200px] my-2 mx-auto px-16  bg-gray-200">
           <section className="pt-10 mb-5">
             <h2 className="section-title">Gợi ý sản phẩm</h2>
-            <ProductList />
+            <ProductList productFilter={productFilter} />
           </section>
         </main>
         {/* recommend */}
@@ -74,17 +103,20 @@ export default function Home({ serviceData, categoryData }) {
     </>
   );
 }
-export async function getStaticProps() {
+
+export async function getServerSideProps() {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const serviceData = await fetch("https://www.jsonkeeper.com/b/U9M4").then(
     (res) => res.json()
   );
   const categoryData = await fetch("https://www.jsonkeeper.com/b/N41Q").then(
     (res) => res.json()
   );
+
   return {
     props: {
       serviceData,
       categoryData,
-    },
+    }, // will be passed to the page component as props
   };
 }
