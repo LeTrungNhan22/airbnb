@@ -1,5 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
+import Link from "next/link";
 import React, { Fragment, useState } from "react";
 import { AiFillMessage } from "react-icons/ai";
 import { FaDollarSign, FaShoppingBag, FaTicketAlt } from "react-icons/fa";
@@ -10,7 +11,7 @@ import { dataDigitalBestSeller } from "../data/mock-data";
 
 const CartScreen = () => {
   // pop up voucher
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   function closeModal() {
     setIsOpen(false);
   }
@@ -169,7 +170,7 @@ const CartScreen = () => {
             </>
           ))}
         </div>
-        <div className="w-[1200px] mx-auto hover:shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] scroll-smooth hover:scroll-auto sticky bottom-0 z-10">
+        <div className="w-[1200px] mx-auto transition ease-in duration-100 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] scroll-smooth hover:scroll-auto sticky bottom-0 z-2">
           <div className=" bg-white rounded shadow p-3 mb-3">
             <div className="grid grid-cols-4">
               {/* voucher */}
@@ -279,16 +280,15 @@ const CartScreen = () => {
                   Tổng thanh toán (1 sản phẩm) :
                   <span className="text-rose-600 text-4xl"> đ258.000</span>
                 </span>
-                <div
-                  href="#_"
-                  className="cursor-pointer rounded px-5 py-2.5 overflow-hidden group bg-rose-500 relative hover:bg-gradient-to-r hover:from-green-500 hover:to-green-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-400 transition-all ease-out duration-300"
-                >
-                  <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
-                  <div className="flex items-center space-x-2">
-                    <FaDollarSign />
-                    <span className="relative">Thanh toán</span>
-                  </div>
-                </div>
+                <Link href="/checkout">
+                  <a className="cursor-pointer rounded px-5 py-2.5 overflow-hidden group bg-rose-500 relative hover:bg-gradient-to-r hover:from-green-500 hover:to-green-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-400 transition-all ease-out duration-300">
+                    <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+                    <div className="flex items-center space-x-2">
+                      <FaDollarSign />
+                      <span className="relative">Thanh toán</span>
+                    </div>
+                  </a>
+                </Link>
               </div>
             </div>
           </div>

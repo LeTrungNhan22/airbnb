@@ -18,6 +18,8 @@ const LoginScreen = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   var base64 = require("base-64");
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
   //Login normally
   const {
     handleSubmit,
@@ -28,19 +30,15 @@ const LoginScreen = () => {
   const submitHandler = async ({ email, password }) => {
     try {
       await axios
-        .post(
-          "http://localhost:8040/ecommerce-floor/user/1.0.0/login/customer",
-          null,
-          {
-            params: {
-              email: email,
-              password: base64.encode(password),
-              "full-name": "null",
-              image: "null",
-              "service-type": "NORMALLY",
-            },
-          }
-        )
+        .post(`${apiUrl}/user/1.0.0/login/customer`, null, {
+          params: {
+            email: email,
+            password: base64.encode(password),
+            "full-name": "null",
+            image: "null",
+            "service-type": "NORMALLY",
+          },
+        })
         .then(function (result) {
           if (result.data.status == "success") {
             localStorage.setItem("userToken", result.data.data);

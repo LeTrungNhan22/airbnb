@@ -55,3 +55,20 @@ a {
   color: red !important;
   font-size: 27px !important;
 }
+.address-checkout {
+  height: 3px;
+  width: 100%;
+  background-position-x: -30px;
+  background-size: 116px 3px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgb(111, 166, 214),
+    rgb(111, 166, 214) 33px,
+    transparent 0px,
+    transparent 41px,
+    rgb(241, 141, 155) 0px,
+    rgb(241, 141, 155) 74px,
+    transparent 0px,
+    transparent 82px
+  );
+}
