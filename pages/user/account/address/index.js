@@ -17,7 +17,7 @@ const UserAddressScreen = () => {
           {/* sidebar */}
 
           {/* profile info */}
-          <div class="col-span-9 grid md:grid-cols-3 gap-4 mt-6 lg:mt-0">
+          <div class="col-span-9 gap-4 mt-6 lg:mt-0 bg-white">
             <UserAddress />
           </div>
           {/* profile info */}
