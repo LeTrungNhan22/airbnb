@@ -46,7 +46,13 @@ const RegisterScreen = () => {
         </div>
       </header>
 
-      <main className="bg-gray-200 min-h-screen"></main>
+      <main className="bg-gray-200 min-h-screen">
+        <section>
+          <div>
+            
+          </div>
+        </section>
+      </main>
     </div>
   );
 };

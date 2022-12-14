@@ -8,7 +8,6 @@ import AuthContext from "../../utils/User";
 
 const SideBar = () => {
   const { user } = useContext(AuthContext);
-  console.log(user);
   const { fullName, imageUrl } = user;
 
   return (
@@ -34,96 +33,10 @@ const SideBar = () => {
       <div className="mt-6 bg-white shadow rounded p-4 divide-y divide-gray-200 space-y-0 text-gray-600">
         <div className="space-y-1">
           <div className="mx-auto w-full max-w-md rounded-2xl bg-white p-2">
-            <Disclosure>
-              {({ open }) => (
-                <>
-                  <Disclosure.Button className="flex w-full justify-between rounded-lg bg-rose-100 px-4 py-2 text-left text-sm font-medium text-rose-900 hover:bg-rose-200 focus:outline-none focus-visible:ring focus-visible:ring-rose-500 focus-visible:ring-opacity-75">
-                    <div className="flex  items-center justify-center space-x-4">
-                      <FaAddressCard />
-                      <span>Tài khoản của tôi</span>
-                    </div>
-
-                    <ChevronUpIcon
-                      className={`${
-                        open ? "rotate-180 transform" : ""
-                      } h-5 w-5 text-rose-500`}
-                    />
-                  </Disclosure.Button>
-                  <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                    <div className="flex flex-col space-y-2 ml-5">
-                      <Link href="/user/account/profile">
-                        <a className="hover:text-rose-600 transition capitalize block">
-                          Hồ sơ
-                        </a>
-                      </Link>
-                      <Link href="/user/account/address">
-                        <a className="hover:text-rose-600 transition capitalize block">
-                          Địa chỉ
-                        </a>
-                      </Link>
-                      <Link href="/user/account/payment">
-                        <a className="hover:text-rose-600 transition capitalize block">
-                          Ngân hàng
-                        </a>
-                      </Link>
-                      <Link href="/user/profile">
-                        <a className="hover:text-rose-600 transition capitalize block">
-                          Đổi mật khẩu
-                        </a>
-                      </Link>
-                    </div>
-                  </Disclosure.Panel>
-                </>
-              )}
-            </Disclosure>
+            {/* //todo viet trong day */}
           </div>
         </div>
-        <div className="space-y-1">
-          <div className="mx-auto w-full max-w-md rounded-2xl bg-white p-2">
-            <Disclosure>
-              {({ open }) => (
-                <>
-                  <Disclosure.Button className="flex w-full justify-between rounded-lg bg-rose-100 px-4 py-2 text-left text-sm font-medium text-rose-900 hover:bg-rose-200 focus:outline-none focus-visible:ring focus-visible:ring-rose-500 focus-visible:ring-opacity-75">
-                    <div className="flex  items-center justify-center space-x-4">
-                      <FaAddressCard />
-                      <span>Tài khoản của tôi</span>
-                    </div>
 
-                    <ChevronUpIcon
-                      className={`${
-                        open ? "rotate-180 transform" : ""
-                      } h-5 w-5 text-rose-500`}
-                    />
-                  </Disclosure.Button>
-                  <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                    <div className="flex flex-col space-y-2 ml-5">
-                      <Link href="/user/profile">
-                        <a className="hover:text-rose-600 transition capitalize block">
-                          Hồ sơ
-                        </a>
-                      </Link>
-                      <Link href="/user/profile">
-                        <a className="hover:text-rose-600 transition capitalize block">
-                          Địa chỉ
-                        </a>
-                      </Link>
-                      <Link href="/user/profile">
-                        <a className="hover:text-rose-600 transition capitalize block">
-                          Ngân hàng
-                        </a>
-                      </Link>
-                      <Link href="/user/profile">
-                        <a className="hover:text-rose-600 transition capitalize block">
-                          Đổi mật khẩu
-                        </a>
-                      </Link>
-                    </div>
-                  </Disclosure.Panel>
-                </>
-              )}
-            </Disclosure>
-          </div>
-        </div>
         <div className="space-y-1">
           <div className="mx-auto w-full max-w-md rounded-2xl bg-white p-2">
             <button className="flex w-full justify-between rounded-lg bg-rose-100 px-4 py-2 text-left text-sm font-medium text-rose-900 hover:bg-rose-200 focus:outline-none focus-visible:ring focus-visible:ring-rose-500 focus-visible:ring-opacity-75">

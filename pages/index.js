@@ -7,15 +7,14 @@ import "slick-carousel/slick/slick-theme.css";
 import SmallCard from "../components/SmallCard";
 import CategoryList from "../components/CategoryList";
 import Banner from "../components/Banner";
-import Footer from "../components/Footer";
 import Layout from "../components/Layout";
 import Advisement from "../components/Advisement";
 import ProductList from "../components/product/ProductList";
 import axios from "axios";
-import { toast } from "react-hot-toast";
 import { getError } from "../utils/error";
 
 export default function Home({ serviceData, categoryData }) {
+  
   const basUrl = process.env.NEXT_PUBLIC_API_URL;
   const [productFilter, setProductFilter] = useState({});
   useEffect(() => {
@@ -42,6 +41,7 @@ export default function Home({ serviceData, categoryData }) {
     getProductFilter();
     console.log(productFilter);
   }, []);
+
   // slideShow
   const settings = {
     className: "slider variable-width",
@@ -53,6 +53,7 @@ export default function Home({ serviceData, categoryData }) {
     variableWidth: true,
   };
   // slideShow
+
   return (
     <>
       <Layout title={`Home`}>

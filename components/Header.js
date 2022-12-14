@@ -28,9 +28,7 @@ import AuthContext from "../utils/User";
 const Header = () => {
   const sellerUrl = process.env.NEXT_PUBLIC_URL;
   const { user, logout, isLogin } = useContext(AuthContext);
-
   const { data: session, status } = useSession();
-
   let [isOpen, setIsOpen] = useState(false);
   function closeModal() {
     setIsOpen(false);
@@ -73,7 +71,11 @@ const Header = () => {
               <Bars3Icon className="p-2 pr-0 h-10 " />
               <div className="w-10 h-10 relative ">
                 <Image
-                  src={user.imageUrl}
+                  src={
+                    isLogin == false
+                      ? "https://scontent.fsgn2-6.fna.fbcdn.net/v/t39.30808-1/273931255_274094178191687_7561785317864133920_n.jpg?stp=dst-jpg_s320x320&_nc_cat=100&ccb=1-7&_nc_sid=7206a8&_nc_ohc=js4seigautUAX9KUKNv&_nc_ht=scontent.fsgn2-6.fna&oh=00_AfBkLiibAndKRa4kUtilSGzi-LcqWwQA8-hJ1BL2KcZQzw&oe=639EC037"
+                      : user.imageUrl
+                  }
                   alt=""
                   layout="fill"
                   className="rounded-full "
@@ -91,73 +93,71 @@ const Header = () => {
             leaveTo="transform opacity-0 scale-95"
           >
             <Menu.Items className="absolute right-10 mt-2 w-60 origin-top-right divide-y divide-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-              <div>
-                <div className="px-1 py-1 ">
-                  <Link href="/user/account/register">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <button
-                          className={`${
-                            active ? "hover-active" : "text-gray-900"
-                          } group flex w-full items-center rounded-md px-2 py-2 text-md`}
-                        >
-                          {active ? (
-                            <div className=" h-5 w-5" aria-hidden="true" />
-                          ) : (
-                            <div className=" h-5 w-5" aria-hidden="true" />
-                          )}
+              {isLogin === false ? (
+                <div>
+                  <div className="px-1 py-1 ">
+                    <Link href="/user/account/register">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            className={`${
+                              active ? "hover-active" : "text-gray-900"
+                            } group flex w-full items-center rounded-md px-2 py-2 text-md`}
+                          >
+                            {active ? (
+                              <div className=" h-5 w-5" aria-hidden="true" />
+                            ) : (
+                              <div className=" h-5 w-5" aria-hidden="true" />
+                            )}
 
-                          <p className="font-semibold">Đăng ký</p>
-                        </button>
-                      )}
-                    </Menu.Item>
-                  </Link>
+                            <p className="font-semibold">Đăng ký</p>
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </Link>
 
-                  <Link href="/user/account/login">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <button
-                          className={`${
-                            active ? "hover-active" : "text-gray-900"
-                          } group flex w-full items-center rounded-md px-2 py-2 text-md`}
-                        >
-                          {active ? (
-                            <div className=" h-5 w-5" aria-hidden="true" />
-                          ) : (
-                            <div className=" h-5 w-5" aria-hidden="true" />
-                          )}
-                          Đăng nhập
-                        </button>
-                      )}
-                    </Menu.Item>
-                  </Link>
-                </div>
-                <div className="px-1 py-1">
-                  <Link href={`${sellerUrl}`}>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <button
-                          className={`${
-                            active ? "hover-active" : "text-gray-900"
-                          } group flex w-full items-center rounded-md px-2 py-2 text-md`}
-                        >
-                          {active ? (
-                            <div className=" h-5 w-5" aria-hidden="true" />
-                          ) : (
-                            <div className=" h-5 w-5" aria-hidden="true" />
-                          )}
-                          Kênh người bán
-                        </button>
-                      )}
-                    </Menu.Item>
-                  </Link>
-                </div>
-              </div>
-
-              {/* <div>
-                  <div>
-                    <span>Hello {user.username}</span>
+                    <Link href="/user/account/login">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            className={`${
+                              active ? "hover-active" : "text-gray-900"
+                            } group flex w-full items-center rounded-md px-2 py-2 text-md`}
+                          >
+                            {active ? (
+                              <div className=" h-5 w-5" aria-hidden="true" />
+                            ) : (
+                              <div className=" h-5 w-5" aria-hidden="true" />
+                            )}
+                            Đăng nhập
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </Link>
                   </div>
+                  <div className="px-1 py-1">
+                    <Link href={`${sellerUrl}`}>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            className={`${
+                              active ? "hover-active" : "text-gray-900"
+                            } group flex w-full items-center rounded-md px-2 py-2 text-md`}
+                          >
+                            {active ? (
+                              <div className=" h-5 w-5" aria-hidden="true" />
+                            ) : (
+                              <div className=" h-5 w-5" aria-hidden="true" />
+                            )}
+                            Kênh người bán
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                <div>
                   <div className="px-1 py-1">
                     <Menu.Item>
                       {({ active }) => (
@@ -177,7 +177,8 @@ const Header = () => {
                       )}
                     </Menu.Item>
                   </div>
-                </div> */}
+                </div>
+              )}
 
               <div className="px-1 py-1">
                 <Menu.Item>
@@ -203,6 +204,7 @@ const Header = () => {
                   )}
                 </Menu.Item>
               </div>
+
               <div className="px-1 py-1">
                 <Link href="/user/account/profile">
                   <Menu.Item>

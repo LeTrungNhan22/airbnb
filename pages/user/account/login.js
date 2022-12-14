@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 
 import { FaFacebookF, FaGoogle, FaRegEnvelope } from "react-icons/fa";
 import { TbLock } from "react-icons/tb";
@@ -13,12 +13,11 @@ import toast from "react-hot-toast";
 import { getError } from "../../../utils/error";
 import Footer from "../../../components/Footer";
 import { useRouter } from "next/router";
+import AuthContext from "../../../utils/User";
 
 const LoginScreen = () => {
   const { data: session, status } = useSession();
-  const router = useRouter();
-  var base64 = require("base-64");
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const { user, logout, isLogin, login } = useContext(AuthContext);
 
   //Login normally
   const {
@@ -29,31 +28,7 @@ const LoginScreen = () => {
   // todo handle submit
   const submitHandler = async ({ email, password }, e) => {
     e.preventDefault();
-    try {
-      await axios
-        .post(`${apiUrl}/user/1.0.0/login/customer`, null, {
-          params: {
-            email: email,
-            password: base64.encode(password),
-            "full-name": "null",
-            image: "null",
-            "service-type": "NORMALLY",
-          },
-        })
-        .then(function (result) {
-          if (result.data.status == "success") {
-            localStorage.setItem("userToken", result.data.data);
-            toast.success("Đăng nhập thành công");
-            router.push("/");
-          } else {
-            toast.error(
-              "Đăng nhập không thành công tài khoản hoặc mật khẩu không chính xác"
-            );
-          }
-        });
-    } catch (error) {
-      console.log(getError(error));
-    }
+    login({ email, password });
   };
   return (
     <>
