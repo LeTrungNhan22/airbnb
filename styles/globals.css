@@ -72,3 +72,8 @@ a {
     transparent 82px
   );
 }
+
+.spin-button-none::-webkit-inner-spin-button,
+.spin-button-none::-webkit-outer-spin-button {
+  appearance: none;
+}

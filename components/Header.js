@@ -20,7 +20,7 @@ import { Dialog, Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import axios from "axios";
 import { getError } from "../utils/error";
-import DialogRegister from "./DialogRegister";
+
 import SearchBar from "./SearchBar";
 import { signOut, useSession } from "next-auth/react";
 import AuthContext from "../utils/User";
@@ -235,11 +235,11 @@ const Header = () => {
           </Transition>
         </Menu>
         {/* Dialog */}
-        <DialogRegister
+        {/* <DialogRegister
           openModal={openModal}
           closeModal={closeModal}
           isOpen={isOpen}
-        />
+        /> */}
         {/* Dialog */}
       </div>
     </header>

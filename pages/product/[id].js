@@ -21,10 +21,39 @@ import Layout from "../../components/Layout";
 import { dataDigitalBestSeller } from "../../data/mock-data";
 import { AiFillMessage } from "react-icons/ai";
 import ProductList from "../../components/product/ProductList";
+import { getError } from "../../utils/error";
 
 export default function ProductScreen() {
   const router = useRouter();
   const { id } = router.query;
+
+  const basUrl = process.env.NEXT_PUBLIC_API_URL;
+  const axios = require("axios");
+  const [productDetailById, setProductDetailById] = useState([]);
+  const getProductDetailById = () => {
+    try {
+      axios
+        .get(`${basUrl}/product/1.0.0/product/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            charset: "utf-8",
+          },
+        })
+        .then(function (response) {
+          const { data } = response;
+          setProductDetailById(data);
+        })
+        .catch(function (error) {
+          console.error(getError(error));
+        });
+    } catch (error) {
+      console.log(getError(error));
+    }
+  };
+
+  useEffect(() => {
+    getProductDetailById();
+  }, [id]);
 
   const [qty, setQty] = useState(1);
   const incQuantity = () => {
@@ -36,17 +65,13 @@ export default function ProductScreen() {
     }
     return setQty(qty - 1);
   };
-  useEffect(() => {});
-
-  const product = dataDigitalBestSeller.find((item) => item.id == id);
-
   const settings = {
     customPaging: function (i) {
       return (
         <a>
           <Image
-            src={product.linkImg}
-            alt={product.title}
+            src={productDetailById.featuredImageUrl}
+            alt={productDetailById.name}
             width={300}
             height={170}
             className="w-full"
@@ -64,16 +89,15 @@ export default function ProductScreen() {
 
   return (
     <>
-      <Layout title={product.title}>
+      <Layout>
         <div className="bg-gray-300 pb-10 ">
-          <BreadCrumb title={product.title} pid={id} />
           <section>
             <div className=" w-[1200px] mb-3 grid grid-cols-2 gap-6  mx-auto bg-white p-4 rounded shadow">
               {/* product image */}
               <div className="flex items-center justify-center">
                 <Image
-                  src={product.linkImg}
-                  alt={product.title}
+                  src={productDetailById.featuredImageUrl}
+                  alt={productDetailById.name}
                   width={300}
                   height={170}
                   className="w-full"
@@ -84,7 +108,7 @@ export default function ProductScreen() {
               {/* product content */}
               <div>
                 <h2 className="text-3xl font-medium uppercase mb-2">
-                  {product.title}
+                  {/* {product.title} */}
                 </h2>
                 <div className="flex mb-4 items-center">
                   <div className="flex gap-1 text-sm text text-yellow-400">
@@ -100,22 +124,22 @@ export default function ProductScreen() {
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <p className="text-gray-800 font-normal space-x-2">
+                  <div className="text-gray-800 font-normal space-x-2">
                     <span>Availability:</span>
                     <span className="text-green-600">In stock</span>
-                  </p>
-                  <p className="text-gray-800 font-normal space-x-2">
+                  </div>
+                  <div className="text-gray-800 font-normal space-x-2">
                     <span>Brand:</span>
                     <span className="">INPEx</span>
-                  </p>
-                  <p className="text-gray-800 font-normal space-x-2">
+                  </div>
+                  <div className="text-gray-800 font-normal space-x-2">
                     <span>Category:</span>
-                    <span className="">{product.category}</span>
-                  </p>
-                  <p className="text-gray-800 font-normal space-x-2">
+                    {/* <span className="">{product.category}</span> */}
+                  </div>
+                  <div className="text-gray-800 font-normal space-x-2">
                     <span>SKU:</span>
                     <span className="">ABC4AU21</span>
-                  </p>
+                  </div>
                 </div>
                 <div className="my-4">
                   <Image
@@ -128,7 +152,7 @@ export default function ProductScreen() {
                 </div>
                 <div className="flex items-baseline mb-1 space-x-2 font-bold mt-4">
                   <p className="text-4xl text-rose-600 font-semibold">
-                    {product.price}
+                    {/* {product.price} */}
                   </p>
                   <p className="text-base text-gray-400 font-semibold line-through">
                     $50.00
@@ -455,13 +479,14 @@ export default function ProductScreen() {
                       magnam iure nam odio illum, cupiditate qui animi?
                     </p>
                   </div>
-                  <table className="table-auto border-collapse w-full text-left my-2">
+                  <div>
+                    {/* <table className="table-auto border-collapse w-full text-left my-2">
                     <tr>
                       <th className="py-2 px-2 border border-gray-200 w-40 font-medium">
                         Loại sản phẩm
                       </th>
                       <th className="py-2 px-2 border border-gray-200 w-40 font-medium">
-                        {product.title}
+                 
                       </th>
                     </tr>
                     <tr>
@@ -469,10 +494,11 @@ export default function ProductScreen() {
                         Vị trí
                       </th>
                       <th className="py-2 px-2 border border-gray-200 w-40 font-medium">
-                        {product.location}
+                      
                       </th>
                     </tr>
-                  </table>
+                  </table> */}
+                  </div>
                 </div>
               </div>
             </div>
@@ -492,4 +518,9 @@ export default function ProductScreen() {
       </Layout>
     </>
   );
+}
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
 }

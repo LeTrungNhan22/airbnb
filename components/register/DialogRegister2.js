@@ -4,9 +4,9 @@ import { useRouter } from "next/router";
 import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { getError } from "../utils/error";
+import { getError } from "../../utils/error";
 
-const DialogRegister = ({ openModal, closeModal, isOpen }) => {
+const DialogRegister = ({ openModal2, closeModal2, isOpen2 }) => {
   const API_URL = "http://localhost:8040/ecommerce-floor/user/1.0.0/user";
   const router = useRouter();
   const {
@@ -75,7 +75,7 @@ const DialogRegister = ({ openModal, closeModal, isOpen }) => {
     <>
       <Transition
         appear
-        show={isOpen}
+        show={isOpen2}
         as={Fragment}
         enter="ease-out duration-300"
         enterFrom="opacity-0"
@@ -86,7 +86,7 @@ const DialogRegister = ({ openModal, closeModal, isOpen }) => {
       >
         <Dialog
           className="fixed inset-0 z-50 overflow-y-auto"
-          onClose={closeModal}
+          onClose={closeModal2}
           as="div"
         >
           <Dialog.Overlay className="fixed inset-0 bg-gray-500/75">
@@ -104,17 +104,15 @@ const DialogRegister = ({ openModal, closeModal, isOpen }) => {
                   <div className="sticky z-50 top-0 mx-auto flex items-center w-full border-b-2">
                     <Dialog.Title
                       as="div"
-                      className="text-lg font-medium leading-6 mx-auto "
+                      className="text-lg font-medium leading-6 mx-auto  mb-3"
                     >
-                      <p className="text-lg font-bold">
-                        Đăng nhập hoặc đăng ký{" "}
-                      </p>
+                      <p className="text-lg font-bold">Đăng ký</p>
                     </Dialog.Title>
                   </div>
 
                   <div className="flex max-w-md mx-auto">
                     <form
-                      onSubmit={handleSubmit(submitHandler)}
+                      // onSubmit={handleSubmit(submitHandler)}
                       className="py-2"
                     >
                       <div className="h-14 my-4">
@@ -122,7 +120,7 @@ const DialogRegister = ({ openModal, closeModal, isOpen }) => {
                           htmlFor=""
                           className="text-gray-600  text-sm font-normal"
                         >
-                          Full Name
+                          Email
                         </label>
                         <input
                           {...register("fullName", {
@@ -144,98 +142,7 @@ const DialogRegister = ({ openModal, closeModal, isOpen }) => {
                           </div>
                         )}
                       </div>
-                      <div className="h-14 my-4">
-                        <label
-                          htmlFor=""
-                          className="text-gray-600  text-sm font-normal"
-                        >
-                          Username
-                        </label>
-                        <input
-                          {...register("username", {
-                            required: "Please enter your username",
-                            minLength: {
-                              value: 6,
-                              message: "Username is more than 5 chars",
-                            },
-                          })}
-                          id="username"
-                          type="text"
-                          name="username"
-                          className="h-10 w-96 border mt-2 px-2 rounded-md"
-                          autoFocus
-                        />
-                        {errors.username && (
-                          <div className="text-red-500 mb-2 w-2/5 text-left font-medium italic inline-block duration-300 transition-all">
-                            {errors.username.message}
-                          </div>
-                        )}
-                      </div>
-                      <div className="h-14 my-4">
-                        <label
-                          htmlFor=""
-                          className="text-gray-600  text-sm font-normal"
-                        >
-                          Email
-                        </label>
-                        <input
-                          {...register("email", {
-                            required: "Please enter email",
-                            pattern: {
-                              value:
-                                /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/i,
-                              message: "Please enter valid email",
-                            },
-                          })}
-                          type="email"
-                          name="email"
-                          id="email"
-                          placeholder="Email"
-                          className="h-10 w-96 border mt-2 px-2 rounded-md"
-                        ></input>
-                        {errors.email && (
-                          <div className="text-red-500 mb-2 w-2/5 text-left font-medium italic inline-block duration-300 transition-all">
-                            {errors.email.message}
-                          </div>
-                        )}
-                      </div>
-                      <div className="h-14 my-4">
-                        <label
-                          htmlFor=""
-                          className="text-gray-600  text-sm font-normal"
-                        >
-                          Password
-                        </label>
-                        <input
-                          {...register("password", {
-                            required: "Please enter password",
-                            minLength: {
-                              value: 6,
-                              message: "Password is more than 5 chars",
-                            },
-                          })}
-                          type="password"
-                          name="password"
-                          id="password"
-                          className="h-10 w-96 border mt-2 px-2 rounded-md"
-                        />
-                        {errors.password && (
-                          <div className="text-red-500 mb-2 w-2/5 text-left font-medium italic inline-block duration-200 transition-all">
-                            {errors.password.message}
-                          </div>
-                        )}
-                      </div>
-                      <div className="h-1/4 mt-10 space-x-4">
-                        <button className="text-white rounded font-semibold bg-cyan-500 hover:bg-cyan-700 py-2 px-6 ">
-                          Post
-                        </button>
-                        <button
-                          onClick={closeModal}
-                          className="text-white rounded font-semibold bg-red-500 hover:bg-red-700 py-2 px-6 "
-                        >
-                          Close
-                        </button>
-                      </div>
+                      <button>Đăng ký</button>
                     </form>
                   </div>
                 </div>

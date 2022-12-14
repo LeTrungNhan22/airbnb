@@ -15,7 +15,7 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [isLogin, setIsLogin] = useState();
   const router = useRouter();
-  var base64 = require("base-64");
+  const base64 = require("base-64");
 
   useEffect(() => {
     if (localStorage.getItem("userToken") != null) {
@@ -25,7 +25,7 @@ export const AuthContextProvider = ({ children }) => {
       setIsLogin(false);
     }
   }, []);
-  // logout
+
   const getUserProfile = async () => {
     try {
       await axios

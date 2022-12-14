@@ -14,32 +14,31 @@ import axios from "axios";
 import { getError } from "../utils/error";
 
 export default function Home({ serviceData, categoryData }) {
-  
   const basUrl = process.env.NEXT_PUBLIC_API_URL;
   const [productFilter, setProductFilter] = useState({});
+
+  const getProductFilter = async () => {
+    try {
+      await axios
+        .post(`${basUrl}/product/1.0.0/product/filter`, {
+          headers: {
+            "Content-Type": "application/json",
+            charset: "utf-8",
+          },
+        })
+        .then(function (response) {
+          const { data } = response;
+          setProductFilter(data);
+        })
+        .catch(function (error) {
+          console.error(getError(error));
+        });
+    } catch (error) {
+      console.log(getError(error));
+    }
+  };
   useEffect(() => {
-    const getProductFilter = async () => {
-      try {
-        await axios
-          .post(`${basUrl}/product/1.0.0/product/filter`, {
-            headers: {
-              "Content-Type": "application/json",
-              charset: "utf-8",
-            },
-          })
-          .then(function (response) {
-            const { data } = response;
-            setProductFilter(data);
-          })
-          .catch(function (error) {
-            console.error(getError(error));
-          });
-      } catch (error) {
-        console.log(getError(error));
-      }
-    };
     getProductFilter();
-    console.log(productFilter);
   }, []);
 
   // slideShow
@@ -106,7 +105,6 @@ export default function Home({ serviceData, categoryData }) {
 }
 
 export async function getServerSideProps() {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const serviceData = await fetch("https://www.jsonkeeper.com/b/U9M4").then(
     (res) => res.json()
   );

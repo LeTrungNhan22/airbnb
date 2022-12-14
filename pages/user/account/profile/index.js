@@ -10,6 +10,7 @@ import AuthContext from "../../../../utils/User";
 
 const UserProfileScreen = () => {
   const { user, logout, isLogin } = useContext(AuthContext);
+  console.log(user);
   return (
     <Layout title={`Profile`}>
       <div className="bg-gray-300">
@@ -50,7 +51,7 @@ const UserProfileScreen = () => {
               </div>
               <div className="space-y-1">
                 <h4 className="text-gray-700 font-medium">{user.fullName}</h4>
-                <p className="text-gray-800">{user.address.address1}</p>
+                <p className="text-gray-800">{user.address?.address1}</p>
 
                 <p className="text-gray-800">{user.telephone}</p>
               </div>

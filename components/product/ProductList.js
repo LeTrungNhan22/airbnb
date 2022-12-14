@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { dataDigitalBestSeller } from "../../data/mock-data";
 import { AiOutlineSearch } from "react-icons/ai";
 import { HeartIcon } from "@heroicons/react/24/outline";
@@ -7,13 +7,17 @@ import { FaHeart, FaShopify, FaStar } from "react-icons/fa";
 import Link from "next/link";
 
 const ProductList = ({ productFilter }) => {
-  const { resultList } = productFilter;
-  console.log(resultList);
+  // const { resultList } = productFilter;
+  const [productSingle, setProductSingle] = useState([]);
+  useEffect(() => {
+    setProductSingle(productFilter?.resultList);
+  }, [productFilter?.resultList]);
+
   return (
     <>
       <div className="container pb-16 my-7">
         <div className="grid grid-cols-4 gap-6">
-          {resultList?.map(
+          {productSingle?.map(
             ({
               description,
               featuredImageUrl,
