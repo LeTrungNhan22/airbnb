@@ -1,14 +1,160 @@
-import React from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import React, { Fragment, useState } from "react";
 import { BsPlusLg } from 'react-icons/Bs';
 
 const UserAddress = () => {
+   // pop up voucher
+   const [isOpen, setIsOpen] = useState(false);
+   function closeModal() {
+     setIsOpen(false);
+   }
+   function openModal() {
+     setIsOpen(true);
+   }
   return  <div>
   
       <div className="flex items-center m-4">
       <h3 className="text-lg font-medium capitalize flex-1">
           Địa chỉ của tôi
       </h3>
-      <button type="button" class=" focus:outline-none text-white bg-red-500 hover:bg-red-400 focus:ring-4 focus:ring-red-500 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 flex items-center"><BsPlusLg className="mr-2"/>Thêm địa chỉ mới</button>
+      {/* <button type="button" class=" focus:outline-none text-white bg-red-500 hover:bg-red-400 focus:ring-4 focus:ring-red-500 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 flex items-center"><BsPlusLg className="mr-2"/>Thêm địa chỉ mới</button> */}
+
+      
+      <>
+                  <button
+                    type="button"
+                    onClick={openModal}
+                    className="flex items-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-rose-600 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                  >
+                  <BsPlusLg className="mr-1"/>
+                    Thêm địa chỉ mới
+                  </button>
+
+                  <Transition appear show={isOpen} as={Fragment}>
+                    <Dialog
+                      as="div"
+                      className="relative z-10"
+                      onClose={closeModal}
+                    >
+                      <Transition.Child
+                        as={Fragment}
+                        enter="ease-out duration-300"
+                        enterFrom="opacity-0"
+                        enterTo="opacity-100"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                      >
+                        <div className="fixed inset-0 bg-black bg-opacity-25" />
+                      </Transition.Child>
+
+                      <div className="fixed inset-0 overflow-y-auto">
+                        <div className="flex min-h-full items-center justify-center p-4 text-center">
+                          <Transition.Child
+                            as={Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0 scale-95"
+                            enterTo="opacity-100 scale-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100 scale-100"
+                            leaveTo="opacity-0 scale-95"
+                          >
+                            <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                              <Dialog.Title
+                                as="h3"
+                                className="text-lg font-medium leading-6 text-gray-900"
+                              >
+                                Địa chỉ mới
+                              </Dialog.Title>
+                              <div className="mt-2">
+                                <div className=" p-2">
+                                  <div className="flex items-center justify-evenly gap-4">
+                                    
+                                    <input
+                                      type="text"
+                                      placeholder="Họ và Tên"
+                                      className="px-4 py-2 w-80 rounded border-gray-400"
+                                    />
+                                    <input
+                                      type="text"
+                                      placeholder="Số điện thoại"
+                                      className="px-4 py-2 w-80 rounded"
+                                    />
+                                    
+                                  </div>
+                                  
+                                  
+                                  <div className="mt-3">
+                                  <select id="countries" className=" border border-gray-400  text-gray-500 rounded w-full px-4 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  ">
+                                    <option selected>Tỉnh/Thành phố, Quận/Huyện, Phường/Xã</option>
+                                    <option value="US">United States</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="FR">France</option>
+                                    <option value="DE">Germany</option>
+                                  </select>
+                                  </div>
+                                  <input
+                                      type="text"
+                                      placeholder="Địa chỉ cựu thể"
+                                      className="px-4 py-2 w-full rounded mt-4"
+                                    />
+                                </div>
+
+
+                                <div className="mt-2">
+
+                                  <div>
+                                  <span>Loại địa chỉ:</span>
+                                  <div className="mt-4 flex space-x-2">
+                                <button type="button" class="text-gray-900 bg-white border  focus:outline-none  focus:ring-1 focus:ring-rose-500 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                                  Nhà Riêng
+                                </button>
+                                <button type="button" class="text-gray-900 bg-white border  focus:outline-none  focus:ring-1 focus:ring-rose-500 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                                  Văn Phòng
+                                </button>
+                              </div>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center ml-2 mt-4">
+                                  <span className="mr-2">
+                                    <input type="checkbox"/>
+                                  </span>
+                                  <span>Đặt làm địa chỉ mặc định</span>
+                                </div>
+                                 
+                              </div>
+
+                              <div className="mt-4 flex justify-end space-x-2">
+                                <button
+                                  type="button"
+                                  className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                  onClick={closeModal}
+                                >
+                                  Trở lại
+                                </button>
+                                <div
+                                      href="#_"
+                                      className="cursor-pointer rounded px-3 py-2 overflow-hidden group bg-rose-300 relative hover:bg-gradient-to-r hover:from-rose-500 hover:to-orange-400 text-rose-600 hover:text-black hover:ring-2 hover:ring-offset-2 hover:ring-orange-400 transition-all ease-out duration-300 border border-rose-600"
+                                    >
+                                      <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+                                      <div className="flex items-center space-x-2 ">
+                                        <span className="relative">
+                                          Áp dụng{" "}
+                                        </span>
+                                      </div>
+                                    </div>
+                              </div>
+                            </Dialog.Panel>
+                          </Transition.Child>
+                        </div>
+                      </div>
+                    </Dialog>
+                  </Transition>
+                </>
+      
+
+
       </div>
       <hr class="my-8 h-px bg-gray-200 border-0 dark:bg-gray-700 "></hr>
 
@@ -38,3 +184,15 @@ const UserAddress = () => {
 };
 
 export default UserAddress;
+
+{/* <div
+                                      href="#_"
+                                      className="cursor-pointer rounded px-3 py-2 overflow-hidden group bg-rose-300 relative hover:bg-gradient-to-r hover:from-rose-500 hover:to-orange-400 text-rose-600 hover:text-black hover:ring-2 hover:ring-offset-2 hover:ring-orange-400 transition-all ease-out duration-300 border border-rose-600"
+                                    >
+                                      <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+                                      <div className="flex items-center space-x-2 ">
+                                        <span className="relative">
+                                          Áp dụng{" "}
+                                        </span>
+                                      </div>
+                                    </div> */}
