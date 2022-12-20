@@ -26,14 +26,13 @@ import { getError } from "../../utils/error";
 export default function ProductScreen() {
   const router = useRouter();
   const { id } = router.query;
-
   const basUrl = process.env.NEXT_PUBLIC_API_URL;
   const axios = require("axios");
   const [productDetailById, setProductDetailById] = useState([]);
   const getProductDetailById = () => {
     try {
       axios
-        .get(`${basUrl}/product/1.0.0/product/${id}`, {
+        .get(`${basUrl}/product/1.0.0/product/${id}/detail`, {
           headers: {
             "Content-Type": "application/json",
             charset: "utf-8",
@@ -70,8 +69,8 @@ export default function ProductScreen() {
       return (
         <a>
           <Image
-            src={productDetailById.featuredImageUrl}
-            alt={productDetailById.name}
+            src={productDetailById.product.featuredImageUrl}
+            alt={productDetailById.product.name}
             width={300}
             height={170}
             className="w-full"
@@ -91,13 +90,17 @@ export default function ProductScreen() {
     <>
       <Layout>
         <div className="bg-gray-300 pb-10 ">
+          <BreadCrumb
+            title={productDetailById.product.name}
+            pid={productDetailById.product.id}
+          />
           <section>
             <div className=" w-[1200px] mb-3 grid grid-cols-2 gap-6  mx-auto bg-white p-4 rounded shadow">
               {/* product image */}
               <div className="flex items-center justify-center">
                 <Image
-                  src={productDetailById.featuredImageUrl}
-                  alt={productDetailById.name}
+                  src={productDetailById.product.featuredImageUrl}
+                  alt={productDetailById.product.name}
                   width={300}
                   height={170}
                   className="w-full"
@@ -108,37 +111,16 @@ export default function ProductScreen() {
               {/* product content */}
               <div>
                 <h2 className="text-3xl font-medium uppercase mb-2">
-                  {/* {product.title} */}
+                  {productDetailById.product.name}
                 </h2>
-                <div className="flex mb-4 items-center">
-                  <div className="flex gap-1 text-sm text text-yellow-400">
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                  </div>
-                  <div className="text-xs text-gray-300 ml-2">
-                    (150 Reviews)
-                  </div>
-                </div>
+
                 <div className="space-y-3">
                   <div className="text-gray-800 font-normal space-x-2">
-                    <span>Availability:</span>
-                    <span className="text-green-600">In stock</span>
-                  </div>
-                  <div className="text-gray-800 font-normal space-x-2">
-                    <span>Brand:</span>
-                    <span className="">INPEx</span>
-                  </div>
-                  <div className="text-gray-800 font-normal space-x-2">
-                    <span>Category:</span>
-                    {/* <span className="">{product.category}</span> */}
-                  </div>
-                  <div className="text-gray-800 font-normal space-x-2">
-                    <span>SKU:</span>
-                    <span className="">ABC4AU21</span>
+                    <span>Loại sản phẩn:</span>
+                    <span className="">
+                      {productDetailById.product.industrialType} -
+                      {productDetailById.product.industrialTypeName}
+                    </span>
                   </div>
                 </div>
                 <div className="my-4">
@@ -152,18 +134,15 @@ export default function ProductScreen() {
                 </div>
                 <div className="flex items-baseline mb-1 space-x-2 font-bold mt-4">
                   <p className="text-4xl text-rose-600 font-semibold">
-                    {/* {product.price} */}
+                    {productDetailById.product.mediumPrice.amount}{" "}
+                    {productDetailById.product.mediumPrice.currencyCode}
                   </p>
                   <p className="text-base text-gray-400 font-semibold line-through">
                     $50.00
                   </p>
                 </div>
-                <p className="mt-4 text-gray-400">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Voluptatibus voluptate maxime, exercitationem at voluptas
-                  consequatur asperiores fuga vitae fugit placeat ad, dolore
-                  accusamus explicabo vero corrupti accusantium molestias labore
-                  qui.
+                <p className="mt-4 text-gray-400 line-clamp-4">
+                  {productDetailById.product.description}
                 </p>
                 <div className="mt-4 grid grid-cols-4 space-x-5">
                   <h3 className="text-md text-gray-800 uppercase font-medium">

@@ -18,6 +18,14 @@ import AuthContext from "../../../utils/User";
 const LoginScreen = () => {
   const { data: session, status } = useSession();
   const { user, logout, isLogin, login } = useContext(AuthContext);
+  const router = useRouter();
+  const { redirect } = router.query;
+
+  useEffect(() => {
+    if (isLogin == true) {
+      router.push(redirect || "/");
+    }
+  }, [isLogin]);
 
   //Login normally
   const {
@@ -62,7 +70,6 @@ const LoginScreen = () => {
               <div className="bg-gray-200 w-80 p-2 flex items-center my-3 rounded shadow-inner shadow-gray-400 transition duration-200 focus-within:shadow-gray-600 focus-within:scale-105">
                 <label htmlFor="email"></label>
                 <FaRegEnvelope className="text-gray-400 mr-2" />
-
                 <input
                   {...register("email", {
                     required: "Please enter email",

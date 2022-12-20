@@ -6,6 +6,7 @@ import "../styles/globals.css";
 import { useRouter } from "next/router";
 import { AuthContextProvider } from "../utils/User";
 
+
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <>

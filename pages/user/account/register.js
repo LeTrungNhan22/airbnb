@@ -1,8 +1,9 @@
+import { fetchData } from "next-auth/client/_utils";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { FaFacebookF, FaGoogle, FaRegEnvelope } from "react-icons/fa";
@@ -21,6 +22,7 @@ const RegisterScreen = () => {
     formState: { errors },
     getValues,
   } = useForm();
+
   const submitHandler = async ({ email, password }, e) => {
     e.preventDefault();
     try {
@@ -45,6 +47,7 @@ const RegisterScreen = () => {
             console.log("data", data);
             localStorage.setItem("_regData", JSON.stringify(data));
             router.push("/user/account/verifyEmail");
+            toast.success("Nhập mã OTP bên dưới");
           }
         })
         .catch(function (error) {

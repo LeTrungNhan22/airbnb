@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { userAgent } from "next/server";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import BreadCrumb from "../../../../components/BreadCrumb";
 import Layout from "../../../../components/Layout";
 import SideBar from "../../../../components/user-profile/SideBar";
@@ -10,7 +11,13 @@ import AuthContext from "../../../../utils/User";
 
 const UserProfileScreen = () => {
   const { user, logout, isLogin } = useContext(AuthContext);
-  console.log(user);
+  const [userProfile, setUserProfile] = useState({});
+  const router = useRouter();
+
+  useEffect(() => {
+    setUserProfile(user);
+  }, [user]);
+
   return (
     <Layout title={`Profile`}>
       <div className="bg-gray-300">
@@ -34,9 +41,11 @@ const UserProfileScreen = () => {
                 </Link>
               </div>
               <div className="space-y-1">
-                <h4 className="text-gray-700 font-medium">{user.fullName}</h4>
-                <p className="text-gray-800">{user.email}</p>
-                <p className="text-gray-800">{user.telephone}</p>
+                <h4 className="text-gray-700 font-medium">
+                  {userProfile.fullName}
+                </h4>
+                <p className="text-gray-800">{userProfile.email}</p>
+                <p className="text-gray-800">{userProfile.telephone}</p>
               </div>
             </div>
 
@@ -51,9 +60,9 @@ const UserProfileScreen = () => {
               </div>
               <div className="space-y-1">
                 <h4 className="text-gray-700 font-medium">{user.fullName}</h4>
-                <p className="text-gray-800">{user.address?.address1}</p>
+                <p className="text-gray-800">{userProfile.address?.address1}</p>
 
-                <p className="text-gray-800">{user.telephone}</p>
+                <p className="text-gray-800">{userProfile.telephone}</p>
               </div>
             </div>
 
