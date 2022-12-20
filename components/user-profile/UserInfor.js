@@ -21,6 +21,7 @@ const UserInforScreen = ({
   gender,
   id,
 }) => {
+
   const convertDob = moment(birthday).format("YYYY-MM-DD");
   const [dobApi, setDobApi] = useState("");
   const [genderApi, setGenderApi] = useState("");
@@ -57,7 +58,10 @@ const UserInforScreen = ({
       dob: dateMilliseconds,
       gender: genderApi,
     });
+   
   };
+
+
 
   return (
     <div>
@@ -112,7 +116,7 @@ const UserInforScreen = ({
                 <label className="text-gray-600 mb-2 block">Giới tính</label>
                 <select
                   {...register("gender", {})}
-                  defaultValue={`${gender == "MAN" ? "MAN" : "WOMEN"}`}
+                  value={genderApi === 'MAN' ? 'MAN' :'WOMEN'}
                   className="input-box"
                   onChange={(e) => handleGender(e)}
                 >
