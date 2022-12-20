@@ -21,26 +21,41 @@ const UserInforScreen = ({
   gender,
   id,
 }) => {
+  const convertDob = moment(birthday).format("YYYY-MM-DD");
+  const [dobApi, setDobApi] = useState("");
+  const [genderApi, setGenderApi] = useState("");
+
+  useEffect(() => {
+    setDobApi(convertDob);
+    setGenderApi(gender);
+  }, [convertDob, gender]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     getValues,
   } = useForm();
-  const convertDob = moment(birthday).format("YYYY-MM-DD");
+
+  const handleDob = (e) => {
+    const selectDob = e.target.value;
+    setDobApi(selectDob);
+  };
+  const handleGender = (e) => {
+    const selectGender = e.target.value;
+    setGenderApi(selectGender);
+  };
+
   const { updateUserProfile } = useContext(AuthContext);
-  const submitHandler = async (
-    { email, fullName, telephone, dob, gender },
-    e
-  ) => {
-    var date = new Date(dob); // some mock date
+  const submitHandler = async ({ email, fullName, telephone, gender }, e) => {
+    var date = new Date(dobApi); // some mock date
     var dateMilliseconds = date.getTime();
     updateUserProfile({
       email,
       fullName,
       telephone,
       dob: dateMilliseconds,
-      gender,
+      gender: genderApi,
     });
   };
 
@@ -86,38 +101,23 @@ const UserInforScreen = ({
                 <label className="text-gray-600 mb-2 block">Birthday</label>
                 <input
                   type="date"
-                  {...register("dob", {
-                    required: "fullName không thể trống",
-                    pattern: {
-                      message: "Vui lòng nhập fullName",
-                    },
-                  })}
+                  onChange={(e) => handleDob(e)}
                   id="dob"
                   name="dob"
-                  value={convertDob}
+                  value={dobApi}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
               <div>
                 <label className="text-gray-600 mb-2 block">Giới tính</label>
                 <select
-                  {...register("gender", {
-                    required: "gender không thể trống",
-                    pattern: {
-                      message: "Vui lòng nhập gender",
-                    },
-                  })}
+                  {...register("gender", {})}
+                  defaultValue={`${gender == "MAN" ? "MAN" : "WOMEN"}`}
                   className="input-box"
+                  onChange={(e) => handleGender(e)}
                 >
-                  <option value="MAN" {...(gender == "MAN" ? "selected" : "")}>
-                    Nam
-                  </option>
-                  <option
-                    value="WOMEN"
-                    {...(gender == "WOMEN" ? "selected" : "")}
-                  >
-                    Nữ
-                  </option>
+                  <option value="MAN">Nam</option>
+                  <option value="WOMEN">Nữ</option>
                 </select>
               </div>
             </div>

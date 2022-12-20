@@ -52,10 +52,11 @@ const RegisterScreen = () => {
         })
         .catch(function (error) {
           console.error(getError(error));
+          toast.error("Email đã được đăng ký trên hệ thống");
         });
     } catch (err) {
-      toast.error("Email đã được đăng ký trên hệ thống");
       console.log(getError(err));
+      toast.error("Email đã được đăng ký trên hệ thống");
     }
   };
 

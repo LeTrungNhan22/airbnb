@@ -100,11 +100,8 @@ export default function UserAddress({ fullName, telephone }) {
   const submitHandler = (
     {
       district,
-      districtCode,
       province,
-      provinceCode,
       ward,
-      wardCode,
       subAddress,
     },
     e
