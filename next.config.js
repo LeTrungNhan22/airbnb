@@ -13,6 +13,7 @@ const nextConfig = {
       "ui-avatars.com",
       "www.google.com",
       "product.hstatic.net",
+      "firebasestorage.googleapis.com",
     ],
   },
 };

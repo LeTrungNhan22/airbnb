@@ -10,6 +10,8 @@ export const AuthContext = createContext({
   logout: () => {},
   login: () => {},
   updateUserProfile: () => {},
+  createUserShop: () => {},
+  updateUserAddress: () => {},
 });
 export const AuthContextProvider = ({ children }) => {
   const axios = require("axios");
@@ -18,10 +20,50 @@ export const AuthContextProvider = ({ children }) => {
   const [userById, setUserById] = useState({});
   const [isLogin, setIsLogin] = useState(false);
   const router = useRouter();
-
-  const { redirect } = router.query;
-
+  const [addressFetching, setAddressFetching] = useState({});
+  const [shopData, setShopData] = useState({});
   const base64 = require("base-64");
+
+  // tạo shop
+  const createUserShop = async ({
+    address,
+    description,
+    district_id,
+    imageUrl,
+    name,
+    phone,
+    wardCode,
+  }) => {
+    if (isLogin == true) {
+      try {
+        await axios
+          .post(`${basUrl}/user/1.0.0/shop/create?user-id=${user.id}`, {
+            address: address,
+            description: description,
+            district_id: district_id,
+            imageUrl: imageUrl,
+            name: name,
+            phone: phone,
+            status: "ACTIVE",
+            wardCode: wardCode,
+          })
+          .then(function (response) {
+            if (response.status == 200) {
+              const { data } = response;
+              console.log(response);
+              setShopData(data);
+              toast.success("Tạo shop thành công");
+              router.push("/");
+            }
+          })
+          .catch(function (error) {
+            console.error(getError(error));
+          });
+      } catch (error) {
+        console.log(getError);
+      }
+    }
+  };
 
   const updateUserAddress = async ({
     district,
@@ -38,12 +80,14 @@ export const AuthContextProvider = ({ children }) => {
           .put(`${basUrl}/user/1.0.0/user/${user.id}/info-address`, {
             address1:
               ward.toString() +
-              " " +
+              ", " +
               district.toString() +
-              " " +
+              ", " +
               province.toString() +
-              " " +
-              subAddress.toString(),
+              "" +
+              "(" +
+              subAddress.toString() +
+              ")",
             district: district,
             districtCode: districtCode,
             province: province,
@@ -54,7 +98,7 @@ export const AuthContextProvider = ({ children }) => {
           .then(function (response) {
             if (response.status == 200) {
               const { data } = response;
-              console.log(data);
+              setAddressFetching(data.address);
               toast.success("Thay đổi địa chỉ thành công");
             }
           })
@@ -199,6 +243,8 @@ export const AuthContextProvider = ({ children }) => {
     login,
     updateUserProfile,
     updateUserAddress,
+    createUserShop,
+    addressFetching,
   };
 
   return (

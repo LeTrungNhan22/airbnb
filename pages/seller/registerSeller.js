@@ -1,45 +1,95 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Link from "next/link";
 import Head from "next/head";
 import { useForm } from "react-hook-form";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { FaShopify } from "react-icons/fa";
 import AuthContext from "../../utils/User";
 import { Dialog, Transition } from "@headlessui/react";
 import { GrLocation } from "react-icons/gr";
 import axios from "axios";
 import { getError } from "../../utils/error";
+import Image from "next/image";
+import Footer from "../../components/Footer";
+import { storage } from "../../firebase/initFirebase";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import { toast } from "react-hot-toast";
+
 const RegisterSellerScreen = () => {
   const basUrl = process.env.NEXT_PUBLIC_API_URL;
-  const { user, userById, logout, isLogin, updateUserAddress } =
-    useContext(AuthContext);
-  const { fullName, telephone, email } = user;
+  const {
+    user,
+    userById,
+    logout,
+    isLogin,
+    updateUserAddress,
+    createUserShop,
+    addressFetching,
+  } = useContext(AuthContext);
+
+  const { fullName, telephone, address, email } = userById;
   const [provinceList, setProvinceList] = useState([]);
   const [provinceId, setProvinceId] = useState("");
   const [districtId, setDistrictId] = useState("");
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
+  const [address1, setAddress1] = useState({});
+  const [isFillAddress, setIsFillAddress] = useState(false);
+
+  useEffect(() => {
+    setAddress1(addressFetching);
+  }, [addressFetching]);
 
   // handle image
+
+  const [downloadURL, setDownloadURL] = useState("");
+  // console.log(downloadURL);
+  const inputEl = useRef(null);
+  let [value, setValue] = useState(0);
   const [selectedFile, setSelectedFile] = useState();
+
   const [checkFile, setCheckFile] = useState(false);
-
-  const imageHandler = (e) => {
-    setSelectedFile(e.target.files[0]);
+  function uploadFile() {
+    // get file
+    var file = inputEl.current.files[0];
+    setSelectedFile(file);
     setCheckFile(true);
-  };
+    console.log(file);
+    // create a storage ref
+    const storageRef = ref(storage, "user_uploads/" + file.name);
+    // upload file
+    const task = uploadBytesResumable(storageRef, file);
+    // update progress bar
+    task.on(
+      "state_change",
+      function progress(snapshot) {
+        setValue((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      },
+      function error(err) {
+        console.log(getError(err));
+      },
+      () => {
+        getDownloadURL(task.snapshot.ref).then((url) => {
+          setDownloadURL(url);
+        });
+      },
 
-  const imagesubmission = () => {
-    if (checkFile) {
-      alert("File Uploaded");
-      console.log(selectedFile);
-    } else {
-      alert("select a file");
-    }
-  };
-
+      function complete() {
+        toast.success("Uploaded to firebase storage successfully!");
+      }
+    );
+  }
   // handle image
-
   // pop up voucher
   const [isOpen, setIsOpen] = useState(false);
   function closeModal() {
@@ -116,7 +166,10 @@ const RegisterSellerScreen = () => {
     formState: { errors },
   } = useForm();
 
-  const submitHandler = ({ district, province, ward, subAddress }, e) => {
+  const submitHandlerAddress1 = (
+    { district, province, ward, subAddress },
+    e
+  ) => {
     e.preventDefault();
     const dtl = districtList.find((item) => item.ghn_id == district);
     const pvl = provinceList.find((item) => item.ghn_id == province);
@@ -129,6 +182,19 @@ const RegisterSellerScreen = () => {
       ward: wl?.name,
       wardCode: wl?.code,
       subAddress: subAddress,
+    });
+    closeModal();
+  };
+  const submitHandleCreateShop = ({ note, shopName },e) => {
+    e.preventDefault();
+    createUserShop({
+      address: address1?.address1,
+      description: note,
+      district_id: address1.districtCode,
+      imageUrl: downloadURL,
+      name: shopName,
+      phone: telephone,
+      wardCode: address1.wardCode,
     });
   };
 
@@ -154,11 +220,11 @@ const RegisterSellerScreen = () => {
       <div className="min h-screen bg-gray-300 ">
         <div className="pt-3 w-[1200px] mx-auto">
           <div className="col-span-9 bg-white mx-3 shadow rounded px-6 pt-6 pb-7  ">
-            <form>
-              <h3 className="text-lg font-medium capitalize mb-4">
-                Điền thông tin
+            <form onSubmit={handleSubmit(submitHandleCreateShop)}>
+              <h3 className="text-lg font-medium  mb-4">
+                Điền thông tin để đăng ký
               </h3>
-              <div className="space-y-4 w-[900px] mx-auto">
+              <div className="space-y-4 w-[1000px] h-full mx-auto">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <div className="grid sm:grid-cols-1 gap-4">
@@ -167,14 +233,18 @@ const RegisterSellerScreen = () => {
                           Tên shop
                         </label>
                         <input
-                          {...register("shopName", {})}
+                          {...register("shopName", {
+                            required: "shopName không thể trống",
+                            pattern: {
+                              message: "shopName phải có hơn 6 kí tự",
+                            },
+                          })}
                           id="shopName"
                           name="shopName"
                           type="text"
                           className="input-box"
                         />
                       </div>
-
                       <div className="grid sm:grid-cols-2 gap-4">
                         <div>
                           <label className="text-gray-600 mb-2 block">
@@ -183,7 +253,7 @@ const RegisterSellerScreen = () => {
                           <input
                             type="text"
                             disabled
-                            placeholder={`${email}`}
+                            placeholder={email}
                             id="email"
                             name="email"
                             className="input-box"
@@ -191,10 +261,9 @@ const RegisterSellerScreen = () => {
                         </div>
                         <div>
                           <label className="text-gray-600 mb-2 block">
-                            Phone Number
+                            Số điện thoại
                           </label>
                           <input
-                            {...register("telephone")}
                             id="telephone"
                             name="telephone"
                             type="text"
@@ -206,61 +275,52 @@ const RegisterSellerScreen = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-300">
-                    <div className="flex items-center justify-center h-full ">
-                      <div className="">
-                        <div className="cursor-pointer relative flex justify-center items-center  rounded-md  h-[100px] w-[100px]">
-                          <input
-                            type="file"
-                            name="file"
-                            onChange={imageHandler}
-                            className="z-20 opacity-0 cursor-pointer h-full w-full"
-                          />
-                          <div className="absolute flex justify-center items-center gap-2 ">
-                            <picture>
-                              <img
-                                alt=""
-                                className={`h-10 w-10 rounded-full ${
-                                  checkFile ? "opacity-1" : "opacity-0"
-                                }`}
-                                src={
-                                  selectedFile
-                                    ? URL.createObjectURL(selectedFile)
-                                    : null
-                                }
-                              />
-                            </picture>
-
-                            <span className="text-[16px] w-[100px] h-[100px] ">
-                              {checkFile ? selectedFile.name : "Chọn 1 ảnh"}
-                            </span>
-                          </div>
-                        </div>
-                        {/* <button
-                        onClick={imagesubmission}
-                        className=" bg-gray-300 text-rose-500 rounded-md"
-                      >
-                        Chọn ảnh
-                      </button> */}
+                  <div className="flex flex-col items-center justify-center space-y-3">
+                    <div className="w-[130px] h-[130px] relative">
+                      <Image
+                        src={
+                          selectedFile
+                            ? URL.createObjectURL(selectedFile)
+                            : "https://firebasestorage.googleapis.com/v0/b/src-ecomer.appspot.com/o/Avatar%20copy.png?alt=media&token=cde526cc-e27b-4f55-b1e2-2cf874c4550a"
+                        }
+                        alt=""
+                        layout="fill"
+                        className="rounded-full"
+                      ></Image>
+                    </div>
+                    <div>
+                      <div style={{ margin: "5px 0" }}>
+                        <progress
+                          value={value}
+                          max="100"
+                          style={{ width: "100%" }}
+                        ></progress>
+                        <br />
+                        <input
+                          type="file"
+                          onChange={uploadFile}
+                          ref={inputEl}
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <div className="p-3 flex text-xs items-center space-x-3 text-amber-500 text-xl mb-3">
+                  <div className=" flex text-xs items-center space-x-3 text-amber-500">
                     <GrLocation className="text-amber-500" />
                     <h3>Địa chỉ nhận hàng</h3>
                   </div>
 
-                  <div className="grid grid-cols-3 mx-auto items-center justify-center px-4 pb-6">
+                  <div className="grid grid-cols-4 mx-auto items-end px-2 pb-6">
                     <div className=" flex flex-col">
-                      <span>{userById.fullName}</span>
-                      <span className="font-bold">{userById.telephone}</span>
+                      <span>{fullName}</span>
+                      <span className="font-bold">{telephone}</span>
+                      <div className="col-span-1">
+                        <p>{address1?.address1}</p>
+                      </div>
                     </div>
-                    <div className="col-span-1">
-                      <p>{userById.address?.address1}</p>
-                    </div>
-                    <div className="space-x-10 mx-auto">
+
+                    <div className="mx-7 bottom-0">
                       <>
                         <button
                           type="button"
@@ -451,7 +511,12 @@ const RegisterSellerScreen = () => {
                                       >
                                         <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
                                         <div className="flex items-center space-x-2 ">
-                                          <button className="relative">
+                                          <button
+                                            onClick={handleSubmit(
+                                              submitHandlerAddress1
+                                            )}
+                                            className="relative"
+                                          >
                                             Áp dụng{" "}
                                           </button>
                                         </div>
@@ -465,26 +530,64 @@ const RegisterSellerScreen = () => {
                         </Transition>
                       </>
                     </div>
+                    <div className="col-span-2">
+                      <div className="flex justify-center">
+                        <div className="mb-3 xl:w-96">
+                          <label
+                            htmlFor="exampleFormControlTextarea1"
+                            className="form-label inline-block mb-2 text-gray-700"
+                          >
+                            Ghi chú
+                          </label>
+                          <textarea
+                            {...register("note", {
+                              required: "ghi chú không thể trống",
+                              pattern: {
+                                message: "ghi chú phải có hơn 6 kí tự",
+                              },
+                            })}
+                            className="
+                                form-control
+                                block
+                                w-full
+                                px-3
+                                py-1.5
+                                text-base
+                                font-normal
+                                text-gray-700
+                                bg-white bg-clip-padding
+                                border border-solid border-gray-300
+                                rounded
+                                transition
+                                ease-in-out
+                                m-0
+                                focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
+                              "
+                            id="exampleFormControlTextarea1"
+                            rows="3"
+                            placeholder="Your message"
+                          ></textarea>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <div className="mt-6">
-                  <div
-                    href="#_"
-                    className="w-1/4 cursor-pointer rounded px-3 py-2 overflow-hidden group bg-white-300 relative hover:bg-gradient-to-r hover:from-gray-800 hover:to-white text-black hover:ring-2 hover:ring-offset-2 hover:ring-black transition-all ease-out duration-300 border border-black"
-                  >
+                  <button className="w-1/4 cursor-pointer rounded px-3 py-2 overflow-hidden group bg-white-300 relative hover:bg-gradient-to-r hover:from-gray-800 hover:to-white text-black hover:ring-2 hover:ring-offset-2 hover:ring-black transition-all ease-out duration-300 border border-black">
                     <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
                     <div className="flex items-center space-x-2 text-white-600 hover:text-black">
                       <FaShopify />
                       <span className="relative">Đăng ký</span>
                     </div>
-                  </div>
+                  </button>
                 </div>
               </div>
             </form>
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 };

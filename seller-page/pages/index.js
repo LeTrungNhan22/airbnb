@@ -2,7 +2,7 @@ export default function Home() {
   return (
     <>
       <div>
-        <a>hello</a>
+        <p className="text-red-500 font-semibold text-2xl">helsddlo</p>
       </div>
     </>
   );

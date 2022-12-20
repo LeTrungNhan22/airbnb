@@ -7,6 +7,7 @@ import React, { Fragment, useState } from "react";
 import { GrLocation } from "react-icons/gr";
 import { dataDigitalBestSeller } from "../data/mock-data";
 
+
 const CheckoutScreen = () => {
   const product = dataDigitalBestSeller.find((item) => item.id === 1);
   // pop up address
