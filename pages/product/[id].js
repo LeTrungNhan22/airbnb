@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import {
@@ -22,68 +22,110 @@ import { dataDigitalBestSeller } from "../../data/mock-data";
 import { AiFillMessage } from "react-icons/ai";
 import ProductList from "../../components/product/ProductList";
 import { getError } from "../../utils/error";
+import { Store } from "../../utils/Store";
+import { toast } from "react-hot-toast";
+import Cookies from "js-cookie";
+import ProductContext from "../../utils/Product";
 
 export default function ProductScreen() {
+  const { productFilter } = useContext(ProductContext);
+  const { resultList } = productFilter;
+
   const router = useRouter();
   const { id } = router.query;
   const basUrl = process.env.NEXT_PUBLIC_API_URL;
   const axios = require("axios");
   const [productDetailById, setProductDetailById] = useState([]);
-  const getProductDetailById = () => {
-    try {
-      axios
-        .get(`${basUrl}/product/1.0.0/product/${id}/detail`, {
+  const { product, shop, variants } = productDetailById;
+  const { state, dispatch } = useContext(Store);
+  const [qty, setQty] = useState(1);
+  const [cartItem, setCartItem] = useState({});
+  const [index, setIndex] = useState(0);
+
+  const incQty = () => {
+    setQty((prevQty) => prevQty + 1);
+  };
+  const decQty = () => {
+    setQty((prevQty) => {
+      if (prevQty - 1 < 1) return 1;
+      return prevQty - 1;
+    });
+  };
+
+  useEffect(() => {
+    const getProductDetailById = async () => {
+      try {
+        await axios
+          .get(`${basUrl}/product/1.0.0/product/${id}/detail`, {
+            headers: {
+              "Content-Type": "application/json",
+              charset: "utf-8",
+            },
+          })
+          .then(function (response) {
+            const { data } = response;
+            setProductDetailById(data);
+          })
+          .catch(function (error) {
+            console.error(getError(error));
+          });
+      } catch (error) {
+        console.log(getError(error));
+      }
+    };
+    if (id != null) {
+      getProductDetailById();
+    } else {
+      return <div>Không tìm thấy thông tin sản phẩm</div>;
+    }
+  }, [id]);
+
+  const addToCartHandler = async () => {
+    dispatch({
+      type: "CART_ADD_ITEM",
+      payload: [...variants, qty],
+    });
+    const cart = Cookies.get("cart");
+    const cartDetail = JSON.parse(localStorage.getItem("cartDetail"));
+    const { id } = cartDetail.cart;
+    const productVariant = JSON.parse(cart).cartItems[0][0];
+    console.log(productVariant);
+    axios
+      .post(
+        `${basUrl}/cart/1.0.0/cart-item/create`,
+        {
+          cartId: id,
+          productVariant: productVariant,
+          quantity: qty,
+          updatedAt: null,
+        },
+        {
           headers: {
             "Content-Type": "application/json",
             charset: "utf-8",
           },
-        })
-        .then(function (response) {
-          const { data } = response;
-          setProductDetailById(data);
-        })
-        .catch(function (error) {
-          console.error(getError(error));
-        });
-    } catch (error) {
-      console.log(getError(error));
-    }
-  };
+        }
+      )
+      .then(function (response) {
+        const { data } = response;
+        setCartItem(data);
+        console.log("cart", cartItem);
+      })
+      .catch(function (error) {
+        console.error(getError(error));
+      });
 
-  useEffect(() => {
-    getProductDetailById();
-  }, [id]);
-
-  const [qty, setQty] = useState(1);
-  const incQuantity = () => {
-    return setQty(qty + 1);
-  };
-  const decQuantity = () => {
-    if (qty === 0) {
-      return 1;
-    }
-    return setQty(qty - 1);
-  };
-  const settings = {
-    customPaging: function (i) {
-      return (
-        <a>
-          <Image
-            src={productDetailById.product?.featuredImageUrl}
-            alt={productDetailById.product?.name}
-            width={300}
-            height={170}
-            className="w-full"
-          ></Image>
-        </a>
-      );
-    },
-    dots: true,
-    dotsClass: "slick-dots slick-thumb",
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
+    toast.success(() => (
+      <span>
+        {" "}
+        Added product in your cart go to your{" "}
+        <b className="font-bold text-amber-500">
+          <Link href="/cart">
+            <a>Cart</a>
+          </Link>
+        </b>
+      </span>
+    ));
   };
 
   return (
@@ -91,35 +133,57 @@ export default function ProductScreen() {
       <Layout>
         <div className="bg-gray-300 pb-10 ">
           <BreadCrumb
-            title={productDetailById.product?.name}
-            pid={productDetailById.product?.id}
+            industrialTypeName={product?.industrialTypeName}
+            title={product?.name}
+            pid={product?.id}
           />
           <section>
             <div className=" w-[1200px] mb-3 grid grid-cols-2 gap-6  mx-auto bg-white p-4 rounded shadow">
               {/* product image */}
-              <div className="flex items-center justify-center">
-                <Image
-                  src={productDetailById.product?.featuredImageUrl}
-                  alt={productDetailById.product?.name}
-                  width={300}
-                  height={170}
-                  className="w-full"
-                ></Image>
+              <div className="w-full flex items-center justify-center">
+                <div className="w-full">
+                  <div className="image-container">
+                    <picture>
+                      <img
+                        className="rounded bg-[#ebebeb] w-[400px] h-[400px] cursor-pointer transition ease-in-out mx-auto"
+                        src={product?.imageUrls && product?.imageUrls[index]}
+                        alt="product-image"
+                      />
+                    </picture>
+                  </div>
+
+                  <div className="flex gap-3  mt-5 items-center justify-center">
+                    {product?.imageUrls.map((item, i) => (
+                      <picture key={i}>
+                        <img
+                          alt=""
+                          src={item}
+                          className={
+                            i === index
+                              ? "w-[70px] h-[70px] bg-[#ebebeb] cursor-pointer bg-[#f02d34]"
+                              : "w-[70px] h-[70px] bg-[#ebebeb] cursor-pointer"
+                          }
+                          onMouseEnter={() => setIndex(i)}
+                        />
+                      </picture>
+                    ))}
+                  </div>
+                </div>
               </div>
+
               {/* product image */}
 
               {/* product content */}
               <div>
                 <h2 className="text-3xl font-medium uppercase mb-2">
-                  {productDetailById.product?.name}
+                  {product?.name}
                 </h2>
 
                 <div className="space-y-3">
-                  <div className="text-gray-800 font-normal space-x-2">
+                  <div className="text-gray-800 font-normal space-x-2 text-xl">
                     <span>Loại sản phẩn:</span>
-                    <span className="">
-                      {productDetailById.product?.industrialType} -
-                      {productDetailById.product?.industrialTypeName}
+                    <span className="text-rose-500">
+                      {product?.industrialTypeName}
                     </span>
                   </div>
                 </div>
@@ -134,15 +198,15 @@ export default function ProductScreen() {
                 </div>
                 <div className="flex items-baseline mb-1 space-x-2 font-bold mt-4">
                   <p className="text-4xl text-rose-600 font-semibold">
-                    {productDetailById.product?.mediumPrice.amount}{" "}
-                    {productDetailById.product?.mediumPrice.currencyCode}
+                    {product?.mediumPrice.amount}{" "}
+                    {product?.mediumPrice.currencyCode}
                   </p>
-                  <p className="text-base text-gray-400 font-semibold line-through">
+                  {/* <p className="text-base text-gray-400 font-semibold line-through">
                     $50.00
-                  </p>
+                  </p> */}
                 </div>
                 <p className="mt-4 text-gray-400 line-clamp-4">
-                  {productDetailById.product?.description}
+                  {product?.description}
                 </p>
                 <div className="mt-4 grid grid-cols-4 space-x-5">
                   <h3 className="text-md text-gray-800 uppercase font-medium">
@@ -278,7 +342,7 @@ export default function ProductScreen() {
                   <div>
                     <div className=" flex border  border-gray-300 text-gray-300 w-max divide-x divide-gray-300">
                       <div
-                        onClick={() => decQuantity()}
+                        onClick={decQty}
                         className="text-green-500 select-none h-8 w-8 text-xl flex items-center justify-center cursor-pointer"
                       >
                         -
@@ -287,7 +351,7 @@ export default function ProductScreen() {
                         {qty}
                       </div>
                       <div
-                        onClick={() => incQuantity()}
+                        onClick={incQty}
                         className=" text-red-500 select-none h-8 w-8 text-xl flex items-center justify-center cursor-pointer"
                       >
                         +
@@ -303,7 +367,9 @@ export default function ProductScreen() {
                     <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
                     <div className="flex items-center space-x-2">
                       <FaShoppingBag />
-                      <span className="relative">Thêm vào giỏ hàng</span>
+                      <span onClick={addToCartHandler} className="relative">
+                        Thêm vào giỏ hàng
+                      </span>
                     </div>
                   </div>
                   <div
@@ -313,7 +379,8 @@ export default function ProductScreen() {
                     <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
                     <div className="flex items-center space-x-2">
                       <FaDollarSign />
-                      <span className="relative">Mua ngay</span>
+
+                      <a className="relative">Mua ngay</a>
                     </div>
                   </div>
                 </div>
@@ -349,18 +416,20 @@ export default function ProductScreen() {
 
           <section>
             <div className=" w-[1200px] mb-3 grid grid-cols-3 gap-6  mx-auto bg-white p-4 rounded shadow">
-              <div className="container flex col-span-1 py-2 px-4 space-x-3 border-r border-gray-200">
+              <div className="container flex col-span-1 py-2 px-4 border-2 space-x-3 border-r border-gray-200">
                 <div>
-                  <Image
-                    src="https://cf.shopee.vn/file/54b3bd20025fdfd891a4f701ef0f1066_tn"
-                    alt="avatar"
-                    width={100}
-                    height={100}
-                    className="object-center object-contain"
-                  />
+                  {shop?.imageUrl && (
+                    <Image
+                      src={shop?.imageUrl}
+                      alt="avatar"
+                      width={100}
+                      height={100}
+                      className="object-center object-contain"
+                    />
+                  )}
                 </div>
                 <div className="flex flex-col">
-                  <span>Fivemart</span>
+                  <span>{shop?.name}</span>
                   <span className="text-sm text-gray-500">
                     Online 4 giờ trước
                   </span>
@@ -393,8 +462,10 @@ export default function ProductScreen() {
                 <div className="grid grid-cols-3 space-x-16">
                   <div className="flex flex-col justify-around">
                     <div className="space-x-3">
-                      <span className="text-gray-500">Đánh giá:</span>
-                      <span className="text-rose-600">71.1k</span>
+                      <span className="text-gray-500">Địa chỉ:</span>
+                      <span className="text-rose-600">
+                        {shop?.address?.address1}
+                      </span>
                     </div>
 
                     <div className="space-x-3">
@@ -435,28 +506,9 @@ export default function ProductScreen() {
                 <h3 className="border-b border-gray-200  text-gray-800 pb-3 font-medium text-3xl">
                   Chi tiết sản phẩm
                 </h3>
-                <div className="w-3/5 pt-6">
+                <div className="w-full pt-6">
                   <div className="text-gray-600 space-y-3">
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Pariatur corporis ullam, voluptatum quam nisi facere
-                      consequatur soluta reiciendis voluptates sequi quis
-                      architecto quas nemo illo repellat laudantium expedita
-                      asperiores. Quod!
-                    </p>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Sunt repellendus ex velit voluptates aspernatur numquam
-                      minima tempore libero soluta doloremque voluptatum
-                      eligendi officia repellat, itaque laborum repudiandae
-                      totam sed perspiciatis.
-                    </p>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Numquam, soluta tempora! Enim veniam dolores assumenda
-                      consectetur sed voluptas eos maxime inventore ducimus
-                      magnam iure nam odio illum, cupiditate qui animi?
-                    </p>
+                    <p>{product?.description}</p>
                   </div>
                   <div>
                     {/* <table className="table-auto border-collapse w-full text-left my-2">
@@ -488,7 +540,7 @@ export default function ProductScreen() {
                 <h3 className="border-b border-rose-600  text-gray-800 pb-3 font-medium text-3xl">
                   Liên quan
                 </h3>
-                <ProductList />
+                <ProductList productFilter={resultList} />
               </div>
             </div>
           </section>

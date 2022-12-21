@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { FaChevronRight, FaHome } from "react-icons/fa";
 
-const BreadCrumb = ({ pid, title }) => {
+const BreadCrumb = ({ pid, title, industrialTypeName }) => {
   return (
     <>
       {/* breadcrumb */}
@@ -16,6 +16,17 @@ const BreadCrumb = ({ pid, title }) => {
         <span className="text-sm text-gray-00">
           <FaChevronRight />
         </span>
+        <Link href={`/product/${pid}`}>
+          <a className="text-rose-800 font-medium">{industrialTypeName}</a>
+        </Link>
+        {industrialTypeName != null ? (
+          <span className="text-sm text-gray-00">
+            <FaChevronRight />
+          </span>
+        ) : (
+          ""
+        )}
+
         <Link href={`/product/${pid}`}>
           <a className="text-rose-800 font-medium">{title}</a>
         </Link>

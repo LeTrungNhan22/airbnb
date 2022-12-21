@@ -14,10 +14,12 @@ import { getError } from "../../../utils/error";
 import Footer from "../../../components/Footer";
 import { useRouter } from "next/router";
 import AuthContext from "../../../utils/User";
+import { auth } from "../../../firebase/initFirebase";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const LoginScreen = () => {
-  const { data: session, status } = useSession();
-  const { user, logout, isLogin, login } = useContext(AuthContext);
+  const { isLogin, login, loginGoogle } = useContext(AuthContext);
   const router = useRouter();
   const { redirect } = router.query;
 
@@ -159,7 +161,7 @@ const LoginScreen = () => {
                 <FaFacebookF className="text-2xl" />
               </button>
               <button
-                onClick={signIn}
+                onClick={loginGoogle}
                 className="border-2 cursor-pointer text-red-600 shadow-lg hover:scale-105 hover:text-green-500  duration-300 transition  border-gray-400 rounded-full p-3 mx-1"
               >
                 <FaGoogle className="text-2xl" />

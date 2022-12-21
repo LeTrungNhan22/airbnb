@@ -5,7 +5,9 @@ import NextNProgress from "nextjs-progressbar";
 import "../styles/globals.css";
 import { useRouter } from "next/router";
 import { AuthContextProvider } from "../utils/User";
+import { ProductContextProvider } from "../utils/Product";
 
+import { StoreProvider } from "../utils/Store";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
@@ -19,11 +21,15 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
         showOnShallow={true}
         options={{ showSpinner: false, easing: "ease" }}
       />
-      <AuthContextProvider>
-        <SessionProvider session={session}>
-          <Component {...pageProps} />
-        </SessionProvider>
-      </AuthContextProvider>
+      <StoreProvider>
+        <ProductContextProvider>
+          <AuthContextProvider>
+            <SessionProvider session={session}>
+              <Component {...pageProps} />
+            </SessionProvider>
+          </AuthContextProvider>
+        </ProductContextProvider>
+      </StoreProvider>
     </>
   );
 }

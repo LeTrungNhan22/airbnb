@@ -4,6 +4,9 @@ import { toast } from "react-hot-toast";
 import { getError } from "./error";
 import { useRouter } from "next/router";
 import moment from "moment";
+import { auth } from "../firebase/initFirebase";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export const AuthContext = createContext({
   user: {},
@@ -12,6 +15,8 @@ export const AuthContext = createContext({
   updateUserProfile: () => {},
   createUserShop: () => {},
   updateUserAddress: () => {},
+  loginGoogle: () => {},
+  getCartDetailById: () => {},
 });
 export const AuthContextProvider = ({ children }) => {
   const axios = require("axios");
@@ -23,6 +28,17 @@ export const AuthContextProvider = ({ children }) => {
   const [addressFetching, setAddressFetching] = useState({});
   const [shopData, setShopData] = useState({});
   const base64 = require("base-64");
+
+  // loginGoogle
+  const [googleUser, setGoogleUser] = useAuthState(auth);
+  const googleAuth = new GoogleAuthProvider();
+
+  const loginGoogle = async () => {
+    const result = await signInWithPopup(auth, googleAuth);
+    console.log(googleUser);
+    toast.success("Đăng nhập thành công");
+    router.push("/");
+  };
 
   // tạo shop
   const createUserShop = async ({
@@ -147,6 +163,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   const logout = () => {
+    auth.signOut();
     localStorage.removeItem("userToken");
     setIsLogin(false);
     setUser({});
@@ -166,18 +183,25 @@ export const AuthContextProvider = ({ children }) => {
             "service-type": "NORMALLY",
           },
         })
-        .then(function (result) {
-          if (result.data.status == "success") {
-            localStorage.setItem("userToken", result.data.data);
-            setIsLogin(true);
-            toast.success("Đăng nhập thành công");
-            router.push("/");
-          } else {
-            toast.error(
-              "Đăng nhập không thành công tài khoản hoặc mật khẩu không chính xác"
-            );
+        .then(
+          function (result) {
+            if (result.data.status == "success") {
+              localStorage.setItem("userToken", result.data.data);
+              setIsLogin(true);
+              toast.success("Đăng nhập thành công");
+              router.push("/");
+            } else {
+              setIsLogin(false);
+              toast.error(
+                "Đăng nhập không thành công tài khoản hoặc mật khẩu không chính xác"
+              );
+            }
+          },
+          (error) => {
+            setIsLogin(false);
+            console.log(getError(error));
           }
-        });
+        );
     } catch (error) {
       console.log(getError(error));
     }
@@ -233,7 +257,27 @@ export const AuthContextProvider = ({ children }) => {
       }
     };
     getUserProfileById();
-  }, [isLogin]);
+  }, [axios, user.id]);
+  useEffect(() => {
+    const getCartDetailById = async () => {
+      if (isLogin == true) {
+        try {
+          await axios
+            .get(`${basUrl}/cart/1.0.0/cart/${user.id}/detail`)
+            .then(function (response) {
+              const { data } = response;
+              localStorage.setItem("cartDetail", JSON.stringify(data));
+            })
+            .catch(function (error) {
+              console.error(getError(error));
+            });
+        } catch (error) {
+          console.log(getError(error));
+        }
+      }
+    };
+    getCartDetailById();
+  }, [isLogin, user.id]);
 
   const context = {
     user,
@@ -245,6 +289,7 @@ export const AuthContextProvider = ({ children }) => {
     updateUserAddress,
     createUserShop,
     addressFetching,
+    loginGoogle,
   };
 
   return (

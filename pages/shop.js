@@ -1,6 +1,6 @@
 import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronUpIcon } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { AiOutlineFilter } from "react-icons/ai";
 import { FaList, FaTh } from "react-icons/fa";
 
@@ -8,9 +8,12 @@ import BreadCrumb from "../components/BreadCrumb";
 import Layout from "../components/Layout";
 import ProductList from "../components/product/ProductList";
 import { dataDigitalBestSeller } from "../data/mock-data";
+import ProductContext from "../utils/Product";
 
 const ShopScreen = () => {
-  const uniqueArr = [...new Set(dataDigitalBestSeller)];
+  const { productFilter } = useContext(ProductContext);
+  const { resultList } = productFilter;
+  console.log(productFilter);
   return (
     <Layout title={`Shops`}>
       <section className="bg-gray-300 ">
@@ -112,28 +115,6 @@ const ShopScreen = () => {
                             <div>
                               <div className="space-y-2">
                                 {/* single category */}
-
-                                {uniqueArr.map((item) => (
-                                  <div
-                                    className="flex items-center"
-                                    key={item.id}
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      id="cat-1"
-                                      className="text-rose-600 rounded-sm cursor-pointer focus:ring-0 outline-none"
-                                    />
-                                    <label
-                                      htmlFor="cat-1s"
-                                      className="text-gray-600 ml-3 cursor-pointer"
-                                    >
-                                      {item.location}
-                                    </label>
-                                    <div className="ml-auto text-gray-600 text-sm">
-                                      (15)
-                                    </div>
-                                  </div>
-                                ))}
 
                                 {/* single category */}
                               </div>
@@ -389,7 +370,7 @@ const ShopScreen = () => {
                 </div>
               </div>
             </div>
-            <ProductList />
+            <ProductList productFilter={resultList} />
             {/* sorting */}
           </div>
           {/* products */}
@@ -400,3 +381,8 @@ const ShopScreen = () => {
 };
 
 export default ShopScreen;
+export async function getServerSideProps() {
+  return {
+    props: {}, // will be passed to the page component as props
+  };
+}

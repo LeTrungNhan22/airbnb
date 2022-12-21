@@ -1,15 +1,26 @@
 import { Dialog, Transition } from "@headlessui/react";
+import axios from "axios";
+import Cookies from "js-cookie";
 import Image from "next/image";
 import Link from "next/link";
-import React, { Fragment, useState } from "react";
+import { useRouter } from "next/router";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { AiFillMessage } from "react-icons/ai";
 import { FaDollarSign, FaShoppingBag, FaTicketAlt } from "react-icons/fa";
 import BreadCrumb from "../components/BreadCrumb";
 import Layout from "../components/Layout";
 import ProductList from "../components/product/ProductList";
 import { dataDigitalBestSeller } from "../data/mock-data";
+import { getError } from "../utils/error";
+import AuthContext from "../utils/User";
 
 const CartScreen = () => {
+  const [qty, setQty] = useState(1);
+  const router = useRouter();
+  const { user, isLogin } = useContext(AuthContext);
+  const [cartDetailByUserId, setCartDetailByUserId] = useState([]);
+
+  const basUrl = process.env.NEXT_PUBLIC_API_URL;
   // pop up voucher
   const [isOpen, setIsOpen] = useState(false);
   function closeModal() {
@@ -19,18 +30,42 @@ const CartScreen = () => {
     setIsOpen(true);
   }
   // pop up voucher
-
-  const [qty, setQty] = useState(1);
-  const incQuantity = () => {
-    return setQty(qty + 1);
+  const incQty = () => {
+    setQty((prevQty) => prevQty + 1);
   };
-  const decQuantity = () => {
-    if (qty === 0) {
-      return 1;
-    }
-    return setQty(qty - 1);
+  const decQty = () => {
+    setQty((prevQty) => {
+      if (prevQty - 1 < 1) return 1;
+      return prevQty - 1;
+    });
   };
 
+  // get cart detail by user id
+
+  useEffect(() => {
+    const getCartDetail = async () => {
+      if (Cookies.get("cart") != null) {
+        if (isLogin == true) {
+          try {
+            await axios
+              .get(`${basUrl}/cart/1.0.0/cart/${user.id}/detail`)
+              .then(function (response) {
+                const { data } = response;
+                const { itemToShops } = data;
+                setCartDetailByUserId(itemToShops);
+              })
+              .catch(function (error) {
+                console.error(getError(error));
+              });
+          } catch (error) {
+            console.log(getError(error));
+          }
+        }
+      }
+    };
+    getCartDetail();
+  }, [user.id]);
+  console.log(cartDetailByUserId);
   return (
     <Layout title="Giỏ hàng">
       <div className="py-2">
@@ -118,57 +153,54 @@ const CartScreen = () => {
         {/* product details */}
 
         <div className="w-[1200px] mx-auto pb-3">
-          {dataDigitalBestSeller.map((item) => (
-            <>
-              <div className=" bg-white   justify-between space-x-3  rounded shadow p-3 mb-3">
-                <div>
-                  <div className=""></div>
-                  <div key={item.id} className="border border-gray-400 px-6">
-                    <div className="flex text-center items-center justify-between">
-                      <div className="flex flex-row justify-center items-center space-x-5 col-span-2">
-                        <input type="checkbox" />
-                        <div className="w-32 h-32 relative">
-                          <Image
+          <>
+            <div className=" bg-white   justify-between space-x-3  rounded shadow p-3 mb-3">
+              <div>
+                <div className="border border-gray-400 px-6">
+                  <div className="flex text-center items-center justify-between">
+                    <div className="flex flex-row justify-center items-center space-x-5 col-span-2">
+                      <input type="checkbox" />
+                      <div className="w-32 h-32 relative">
+                        {/* <Image
                             src={item.linkImg}
                             alt=""
                             layout="fill"
                             className="object-center object-contain"
-                          ></Image>
-                        </div>
-                        <span>{item.title}</span>
+                          ></Image> */}
                       </div>
-                      <div className="w-1/2 flex items-center justify-between">
-                        <span>{item.price}</span>
-                        <div>
-                          <div className="  flex border  border-gray-300 text-gray-300 w-max divide-x divide-gray-300">
-                            <div
-                              onClick={() => decQuantity()}
-                              className="text-green-500 select-none h-8 w-8 text-xl flex items-center justify-center cursor-pointer"
-                            >
-                              -
-                            </div>
-                            <div className="select-none font-semibold text-black h-8 w-8 text-base flex items-center justify-center">
-                              {qty}
-                            </div>
-                            <div
-                              onClick={() => incQuantity()}
-                              className=" text-red-500 select-none h-8 w-8 text-xl flex items-center justify-center cursor-pointer"
-                            >
-                              +
-                            </div>
+                      <span>{}</span>
+                    </div>
+                    <div className="w-1/2 flex items-center justify-between">
+                      <span>{}</span>
+                      <div>
+                        <div className="  flex border  border-gray-300 text-gray-300 w-max divide-x divide-gray-300">
+                          <div
+                            onClick={() => decQty()}
+                            className="text-green-500 select-none h-8 w-8 text-xl flex items-center justify-center cursor-pointer"
+                          >
+                            -
+                          </div>
+                          <div className="select-none font-semibold text-black h-8 w-8 text-base flex items-center justify-center">
+                            {qty}
+                          </div>
+                          <div
+                            onClick={() => incQty()}
+                            className=" text-red-500 select-none h-8 w-8 text-xl flex items-center justify-center cursor-pointer"
+                          >
+                            +
                           </div>
                         </div>
-                        <span>{item.price}</span>
-                        <div>
-                          <span className="text-red-500">Xóa</span>
-                        </div>
+                      </div>
+                      <span>{}</span>
+                      <div>
+                        <span className="text-red-500">Xóa</span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </>
-          ))}
+            </div>
+          </>
         </div>
         <div className="w-[1200px] mx-auto transition ease-in duration-100 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] scroll-smooth hover:scroll-auto sticky bottom-0 z-2">
           <div className=" bg-white rounded shadow p-3 mb-3">

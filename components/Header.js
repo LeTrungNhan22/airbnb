@@ -30,7 +30,6 @@ const Header = () => {
   const router = useRouter();
   const sellerUrl = process.env.NEXT_PUBLIC_URL;
   const { user, logout, isLogin } = useContext(AuthContext);
-  const { data: session, status } = useSession();
   let [isOpen, setIsOpen] = useState(false);
   const { redirect } = router;
   function closeModal() {
@@ -43,7 +42,7 @@ const Header = () => {
   return (
     <header className="p-5 sticky z-50 top-0 bg-white md:px-10 shadow-md grid grid-cols-1 md:grid-cols-3">
       <div className="relative hidden md:flex items-center h-10">
-        {/* <Link href="/">
+        <Link href="/">
           <a href="">
             <Image
               src="https://links.papareact.com/qd3"
@@ -53,7 +52,7 @@ const Header = () => {
               objectPosition="left"
             />
           </a>
-        </Link> */}
+        </Link>
       </div>
 
       <SearchBar />
@@ -74,20 +73,16 @@ const Header = () => {
             <Menu.Button className="flex px-1 h-12 items-center space-x-1 border-2 rounded-full cursor-pointer hover:shadow-md duration-200 transition">
               <Bars3Icon className="p-2 pr-0 h-10 " />
               <div className="w-10 h-10 relative ">
-                {user.imageUrl && (
-                  <>
-                    <Image
-                      src={
-                        isLogin == false
-                          ? "https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-1/273931255_274094178191687_7561785317864133920_n.jpg?stp=dst-jpg_s320x320&_nc_cat=100&ccb=1-7&_nc_sid=7206a8&_nc_ohc=yoaQfTmU5MMAX-LA1gZ&_nc_ht=scontent.fsgn5-5.fna&oh=00_AfAslaOCWfRwvjS2gvK4gh8qb2nLfEnm0G2U0qpkhAxgUg&oe=63A4AEF7"
-                          : user.imageUrl
-                      }
-                      alt=""
-                      layout="fill"
-                      className="rounded-full "
-                    ></Image>
-                  </>
-                )}
+                <Image
+                  src={
+                    user.imageUrl != null
+                      ? user.imageUrl
+                      : "https://firebasestorage.googleapis.com/v0/b/tmdtnextjs.appspot.com/o/Avatar%20copy.png?alt=media&token=e965a16e-f2bf-4b27-8341-44381b41da9f"
+                  }
+                  alt=""
+                  layout="fill"
+                  className="rounded-full "
+                ></Image>
               </div>
             </Menu.Button>
           </div>

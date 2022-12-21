@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import Slider from "react-slick";
 import { useEffect } from "react";
 import "slick-carousel/slick/slick.css";
@@ -12,34 +12,14 @@ import Advisement from "../components/Advisement";
 import ProductList from "../components/product/ProductList";
 import axios from "axios";
 import { getError } from "../utils/error";
+import ProductContext from "../utils/Product";
 
 export default function Home({ serviceData, categoryData }) {
+  const axios = require("axios");
   const basUrl = process.env.NEXT_PUBLIC_API_URL;
-  const [productFilter, setProductFilter] = useState({});
-
-  const getProductFilter = async () => {
-    try {
-      await axios
-        .post(`${basUrl}/product/1.0.0/product/filter`, {
-          headers: {
-            "Content-Type": "application/json",
-            charset: "utf-8",
-          },
-        })
-        .then(function (response) {
-          const { data } = response;
-          setProductFilter(data);
-        })
-        .catch(function (error) {
-          console.error(getError(error));
-        });
-    } catch (error) {
-      console.log(getError(error));
-    }
-  };
-  useEffect(() => {
-    getProductFilter();
-  }, []);
+  const { productFilter } = useContext(ProductContext);
+  const { resultList, maxResult } = productFilter;
+  const [industrialList, setIndustrialList] = useState([]);
 
   // slideShow
   const settings = {
@@ -52,6 +32,26 @@ export default function Home({ serviceData, categoryData }) {
     variableWidth: true,
   };
   // slideShow
+
+  useEffect(() => {
+    const getIndustrialList = async () => {
+      try {
+        await axios
+          .get(`${basUrl}/product/1.0.0/product/industrials`)
+          .then(function (response) {
+            const { data } = response;
+
+            setIndustrialList(data);
+          })
+          .catch(function (error) {
+            console.error(getError(error));
+          });
+      } catch (error) {
+        console.log(getError(error));
+      }
+    };
+    getIndustrialList();
+  }, []);
 
   return (
     <>
@@ -77,8 +77,8 @@ export default function Home({ serviceData, categoryData }) {
               <div className="flex-1 w-full mx-auto">
                 <div className="mt-2">
                   <Slider {...settings}>
-                    {categoryData?.map(({ img, catName }) => (
-                      <CategoryList img={img} key={img} catName={catName} />
+                    {industrialList?.map(({ name, iconUrl }) => (
+                      <CategoryList name={name} key={name} iconUrl={iconUrl} />
                     ))}
                   </Slider>
                 </div>
@@ -91,7 +91,7 @@ export default function Home({ serviceData, categoryData }) {
         <main className="max-w-[1200px] my-2 mx-auto px-16  bg-gray-200">
           <section className="pt-10 mb-5">
             <h2 className="section-title">Gợi ý sản phẩm</h2>
-            <ProductList productFilter={productFilter} />
+            <ProductList productFilter={resultList} />
           </section>
         </main>
         {/* recommend */}
