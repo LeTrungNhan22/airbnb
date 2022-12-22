@@ -1,5 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/24/outline";
+import axios from "axios";
 import Cookies from "js-cookie";
 import Head from "next/head";
 import Image from "next/image";
@@ -11,8 +12,10 @@ import { getError } from "../utils/error";
 import AuthContext from "../utils/User";
 
 const CheckoutScreen = () => {
+  const basUrl = process.env.NEXT_PUBLIC_API_URL;
   const { user, isLogin } = useContext(AuthContext);
   const [cartDetailByUserId, setCartDetailByUserId] = useState([]);
+  console.log(cartDetailByUserId);
 
   useEffect(() => {
     const getCartDetail = async () => {
@@ -25,7 +28,7 @@ const CheckoutScreen = () => {
                 const { data } = response;
                 const { cart, itemToShops } = data;
                 const { totalPrice } = cart;
-                setCartTotalPrice(totalPrice);
+
                 setCartDetailByUserId(itemToShops);
               })
               .catch(function (error) {
@@ -39,7 +42,7 @@ const CheckoutScreen = () => {
     };
     getCartDetail();
   }, [user.id]);
-  const product = dataDigitalBestSeller.find((item) => item.id === 1);
+
   // pop up address
   const [isOpen, setIsOpen] = useState(false);
   function closeModal() {
@@ -256,9 +259,9 @@ const CheckoutScreen = () => {
                   </span>
                 </div>
                 <div className="flex col-span-2 justify-between items-center p-4">
-                  <span>{product.price}</span>
-                  <span>1</span>
-                  <span>{product.price}</span>
+                  <span>{totalPrice}</span>
+                  <span>{quantity}</span>
+                  <span>{totalPrice}</span>
                 </div>
               </div>
             )
