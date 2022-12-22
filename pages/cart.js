@@ -4,7 +4,13 @@ import Cookies from "js-cookie";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { AiFillMessage } from "react-icons/ai";
 import { FaDollarSign, FaShoppingBag, FaTicketAlt } from "react-icons/fa";
 import BreadCrumb from "../components/BreadCrumb";
@@ -13,32 +19,27 @@ import ProductList from "../components/product/ProductList";
 import { dataDigitalBestSeller } from "../data/mock-data";
 import { getError } from "../utils/error";
 import AuthContext from "../utils/User";
+import GooglePayButton from "@google-pay/button-react";
+import { UpdateQuantity } from "../components/product/UpdateQuantity";
 
 const CartScreen = () => {
-  const [qty, setQty] = useState(1);
   const router = useRouter();
   const { user, isLogin } = useContext(AuthContext);
   const [cartDetailByUserId, setCartDetailByUserId] = useState([]);
+  const [cartTotalPrice, setCartTotalPrice] = useState("");
+  const { productVariant } = cartDetailByUserId;
+  const [qty, setQty] = useState(0);
 
   const basUrl = process.env.NEXT_PUBLIC_API_URL;
-  // pop up voucher
+
   const [isOpen, setIsOpen] = useState(false);
   function closeModal() {
+    console.log(cartDetailByUserId);
     setIsOpen(false);
   }
   function openModal() {
     setIsOpen(true);
   }
-  // pop up voucher
-  const incQty = () => {
-    setQty((prevQty) => prevQty + 1);
-  };
-  const decQty = () => {
-    setQty((prevQty) => {
-      if (prevQty - 1 < 1) return 1;
-      return prevQty - 1;
-    });
-  };
 
   // get cart detail by user id
 
@@ -51,7 +52,9 @@ const CartScreen = () => {
               .get(`${basUrl}/cart/1.0.0/cart/${user.id}/detail`)
               .then(function (response) {
                 const { data } = response;
-                const { itemToShops } = data;
+                const { cart, itemToShops } = data;
+                const { totalPrice } = cart;
+                setCartTotalPrice(totalPrice);
                 setCartDetailByUserId(itemToShops);
               })
               .catch(function (error) {
@@ -65,7 +68,8 @@ const CartScreen = () => {
     };
     getCartDetail();
   }, [user.id]);
-  console.log(cartDetailByUserId);
+  useEffect(() => {}, []);
+
   return (
     <Layout title="Giỏ hàng">
       <div className="py-2">
@@ -141,7 +145,7 @@ const CartScreen = () => {
                 <span>Sản phẩm</span>
               </div>
             </div>
-            <div className="flex w-1/2 text-gray-500 items-center  justify-between space-x-3">
+            <div className="flex w-1/2 text-gray-500 items-center  justify-between ">
               <span>Đơn giá</span>
               <span>Số lượng</span>
               <span>Số tiền</span>
@@ -153,54 +157,42 @@ const CartScreen = () => {
         {/* product details */}
 
         <div className="w-[1200px] mx-auto pb-3">
-          <>
-            <div className=" bg-white   justify-between space-x-3  rounded shadow p-3 mb-3">
-              <div>
-                <div className="border border-gray-400 px-6">
-                  <div className="flex text-center items-center justify-between">
-                    <div className="flex flex-row justify-center items-center space-x-5 col-span-2">
-                      <input type="checkbox" />
-                      <div className="w-32 h-32 relative">
-                        {/* <Image
-                            src={item.linkImg}
-                            alt=""
-                            layout="fill"
-                            className="object-center object-contain"
-                          ></Image> */}
-                      </div>
-                      <span>{}</span>
-                    </div>
-                    <div className="w-1/2 flex items-center justify-between">
-                      <span>{}</span>
-                      <div>
-                        <div className="  flex border  border-gray-300 text-gray-300 w-max divide-x divide-gray-300">
-                          <div
-                            onClick={() => decQty()}
-                            className="text-green-500 select-none h-8 w-8 text-xl flex items-center justify-center cursor-pointer"
-                          >
-                            -
+          {cartDetailByUserId.map(
+            ({ totalPrice, quantity, productVariant, id }) => (
+              <>
+                <div
+                  key={id}
+                  className=" bg-white   justify-between space-x-3  rounded shadow p-3 mb-3"
+                >
+                  <div>
+                    <div className="border border-gray-400 px-6">
+                      <div className="flex text-center items-center justify-between">
+                        <div className="flex flex-row justify-center items-center space-x-5 col-span-2">
+                          <input type="checkbox" />
+                          <div className="w-32 h-32 relative">
+                            <Image
+                              src={productVariant.imageUrl}
+                              alt=""
+                              layout="fill"
+                              className="object-center object-contain"
+                            ></Image>
                           </div>
-                          <div className="select-none font-semibold text-black h-8 w-8 text-base flex items-center justify-center">
-                            {qty}
-                          </div>
-                          <div
-                            onClick={() => incQty()}
-                            className=" text-red-500 select-none h-8 w-8 text-xl flex items-center justify-center cursor-pointer"
-                          >
-                            +
-                          </div>
+                          <span>{productVariant.productName}</span>
                         </div>
-                      </div>
-                      <span>{}</span>
-                      <div>
-                        <span className="text-red-500">Xóa</span>
+
+                        <UpdateQuantity
+                          cartId={id}
+                          quantity={quantity}
+                          totalPrice={totalPrice}
+                          price={productVariant.price.amount}
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </>
+              </>
+            )
+          )}
         </div>
         <div className="w-[1200px] mx-auto transition ease-in duration-100 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] scroll-smooth hover:scroll-auto sticky bottom-0 z-2">
           <div className=" bg-white rounded shadow p-3 mb-3">
@@ -307,10 +299,17 @@ const CartScreen = () => {
               </div>
 
               {/* voucher */}
+
               <div className="w-full border-b mb-3 py-1 flex items-end justify-end col-span-4 space-x-10">
                 <span>
-                  Tổng thanh toán (1 sản phẩm) :
-                  <span className="text-rose-600 text-4xl"> đ258.000</span>
+                  Tổng thanh toán ({cartDetailByUserId.length} sản phẩm) :
+                  <span className="text-rose-600 text-4xl">
+                    {" "}
+                    {cartTotalPrice.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </span>
                 </span>
                 <Link href="/checkout">
                   <a className="cursor-pointer rounded px-5 py-2.5 overflow-hidden group bg-rose-500 relative hover:bg-gradient-to-r hover:from-green-500 hover:to-green-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-400 transition-all ease-out duration-300">

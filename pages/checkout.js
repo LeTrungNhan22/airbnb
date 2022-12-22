@@ -1,14 +1,44 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/24/outline";
+import Cookies from "js-cookie";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { GrLocation } from "react-icons/gr";
 import { dataDigitalBestSeller } from "../data/mock-data";
-
+import { getError } from "../utils/error";
+import AuthContext from "../utils/User";
 
 const CheckoutScreen = () => {
+  const { user, isLogin } = useContext(AuthContext);
+  const [cartDetailByUserId, setCartDetailByUserId] = useState([]);
+
+  useEffect(() => {
+    const getCartDetail = async () => {
+      if (Cookies.get("cart") != null) {
+        if (isLogin == true) {
+          try {
+            await axios
+              .get(`${basUrl}/cart/1.0.0/cart/${user.id}/detail`)
+              .then(function (response) {
+                const { data } = response;
+                const { cart, itemToShops } = data;
+                const { totalPrice } = cart;
+                setCartTotalPrice(totalPrice);
+                setCartDetailByUserId(itemToShops);
+              })
+              .catch(function (error) {
+                console.error(getError(error));
+              });
+          } catch (error) {
+            console.log(getError(error));
+          }
+        }
+      }
+    };
+    getCartDetail();
+  }, [user.id]);
   const product = dataDigitalBestSeller.find((item) => item.id === 1);
   // pop up address
   const [isOpen, setIsOpen] = useState(false);
@@ -205,30 +235,34 @@ const CheckoutScreen = () => {
               <span>Thành tiền</span>
             </div>
           </div>
-          <div className="px-4">
-            <span> FiveMart - Chất Lượng 5 Sao</span>
-          </div>
-          <div className="grid grid-cols-4">
-            <div className=" flex items-center space-x-3 px-2">
-              <div className="w-32 h-32 relative">
-                <Image
-                  src={product.linkImg}
-                  alt=""
-                  layout="fill"
-                  className="object-center object-contain "
-                ></Image>
+
+          {cartDetailByUserId.map(
+            ({ totalPrice, quantity, productVariant, id }) => (
+              <div className="grid grid-cols-4" key={id}>
+                <div className=" flex items-center space-x-3 px-2">
+                  <div className="w-32 h-32 relative">
+                    <Image
+                      src={productVariant.imageUrl}
+                      alt=""
+                      layout="fill"
+                      className="object-center object-contain "
+                    ></Image>
+                  </div>
+                  <span>{productVariant.productName}</span>
+                </div>
+                <div className="items-center flex">
+                  <span className="text-gray-400">
+                    {productVariant.industrial}
+                  </span>
+                </div>
+                <div className="flex col-span-2 justify-between items-center p-4">
+                  <span>{product.price}</span>
+                  <span>1</span>
+                  <span>{product.price}</span>
+                </div>
               </div>
-              <span>{product.title}</span>
-            </div>
-            <div className="items-center flex">
-              <span className="text-gray-400">{product.category}</span>
-            </div>
-            <div className="flex col-span-2 justify-between items-center p-4">
-              <span>{product.price}</span>
-              <span>1</span>
-              <span>{product.price}</span>
-            </div>
-          </div>
+            )
+          )}
 
           <div className="bg-cyan-50 w-full  px-2 py-4 border border-cyan-200">
             <div className="grid grid-cols-3">

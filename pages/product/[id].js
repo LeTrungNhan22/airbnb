@@ -89,7 +89,6 @@ export default function ProductScreen() {
     const cartDetail = JSON.parse(localStorage.getItem("cartDetail"));
     const { id } = cartDetail.cart;
     const productVariant = JSON.parse(cart).cartItems[0][0];
-    console.log(productVariant);
     axios
       .post(
         `${basUrl}/cart/1.0.0/cart-item/create`,

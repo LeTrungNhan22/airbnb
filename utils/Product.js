@@ -14,7 +14,6 @@ export const ProductContextProvider = ({ children }) => {
   const basUrl = process.env.NEXT_PUBLIC_API_URL;
   const [productFilter, setProductFilter] = useState({});
   const [isLoad, setIsLoad] = useState(false);
-  console.log("product", productFilter);
 
   useEffect(() => {
     const getProductFilter = async () => {
@@ -22,7 +21,7 @@ export const ProductContextProvider = ({ children }) => {
         await axios
           .post(
             `${basUrl}/product/1.0.0/product/filter`,
-            {},
+            { maxResult: 35 },
             {
               headers: {
                 "Content-Type": "application/json",
